@@ -1,0 +1,48 @@
+================================================================================
+ORIGINAL HERO PROFILE SECTION - Removed for Morph Integration
+================================================================================
+Removed on: January 29, 2026
+Source: Foreground-locked/devport.html (lines 169-201)
+
+================================================================================
+HTML
+================================================================================
+
+                <div class="hero-image-wrapper">
+                    <div class="hero-image-container">
+                        <div class="profile-image-glow"></div>
+                        <div class="profile-image-frame">
+                            <div class="profile-image" id="profileImage">
+                                <div class="profile-placeholder">
+                                    <i class="fas fa-code"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="floating-badge badge-1">
+                            <i class="fab fa-react"></i>
+                            <div class="badge-content">
+                                <span class="badge-title">React</span>
+                                <span class="badge-libs">Redux, Router, Hooks</span>
+                            </div>
+                        </div>
+                        <div class="floating-badge badge-2">
+                            <i class="fab fa-node-js"></i>
+                            <div class="badge-content">
+                                <span class="badge-title">Node.js</span>
+                                <span class="badge-libs">Express, Socket.io, MongoDB</span>
+                            </div>
+                        </div>
+                        <div class="floating-badge badge-3">
+                            <i class="fab fa-js"></i>
+                            <div class="badge-content">
+                                <span class="badge-title">JavaScript</span>
+                                <span class="badge-libs">ES6+, TypeScript, jQuery</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+================================================================================
+TO RESTORE:
+Replace the hero-image-wrapper section with this original HTML
+================================================================================

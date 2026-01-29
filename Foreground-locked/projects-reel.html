@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: transparent;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+        }
+
+        .card-stream {
+            position: absolute;
+            width: 100vw;
+            height: 220px;
+            display: flex;
+            align-items: center;
+            overflow: visible;
+        }
+
+        .card-line {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            white-space: nowrap;
+            cursor: grab;
+            user-select: none;
+            will-change: transform;
+        }
+
+        .card-line:active { cursor: grabbing; }
+        .card-line.dragging { cursor: grabbing; }
+
+        .card-wrapper {
+            position: relative;
+            width: 320px;
+            height: 200px;
+            flex-shrink: 0;
+        }
+
+        .card {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 320px;
+            height: 200px;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .card-normal {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            z-index: 2;
+            clip-path: inset(0 0 0 var(--clip-right, 0%));
+            border: 1px solid rgba(148, 163, 184, 0.2);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .card-content {
+            padding: 12px 16px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #f1f5f9;
+            margin-bottom: 4px;
+        }
+
+        .card-tech {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .tech-tag {
+            font-size: 10px;
+            padding: 2px 8px;
+            background: rgba(192, 132, 252, 0.2);
+            color: #c084fc;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .card-ascii {
+            background: transparent;
+            z-index: 1;
+            clip-path: inset(0 calc(100% - var(--clip-left, 0%)) 0 0);
+        }
+
+        .ascii-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            color: rgba(192, 132, 252, 0.7);
+            font-family: 'Courier New', monospace;
+            font-size: 9px;
+            line-height: 11px;
+            overflow: hidden;
+            white-space: pre;
+            animation: glitch 0.1s infinite linear alternate-reverse;
+            -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.2) 100%);
+            mask-image: linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.2) 100%);
+        }
+
+        @keyframes glitch {
+            0% { opacity: 1; }
+            50% { opacity: 0.85; }
+            100% { opacity: 1; }
+        }
+
+        #particleCanvas {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            width: 100vw;
+            height: 220px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        #scannerCanvas {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            width: 100vw;
+            height: 280px;
+            z-index: 15;
+            pointer-events: none;
+        }
+
+        .scan-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(192, 132, 252, 0.4), transparent);
+            animation: scanEffect 0.6s ease-out;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        @keyframes scanEffect {
+            0% { transform: translateX(-100%); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(100%); opacity: 0; }
+        }
+
+        .drag-hint {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(148, 163, 184, 0.6);
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <canvas id="particleCanvas"></canvas>
+        <canvas id="scannerCanvas"></canvas>
+        <div class="card-stream" id="cardStream">
+            <div class="card-line" id="cardLine"></div>
+        </div>
+        <div class="drag-hint">
+            <i class="fas fa-hand-pointer"></i>
+            <span>Drag to explore projects</span>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Project data
+        const projects = [
+            {
+                title: "E-Commerce Platform",
+                tech: ["React", "Node.js", "MongoDB"],
+                icon: "fa-shopping-cart",
+                gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+            },
+            {
+                title: "Task Management App",
+                tech: ["React", "Firebase", "TypeScript"],
+                icon: "fa-tasks",
+                gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+            },
+            {
+                title: "Blog Platform",
+                tech: ["Next.js", "Prisma", "PostgreSQL"],
+                icon: "fa-blog",
+                gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+            },
+            {
+                title: "Portfolio Website",
+                tech: ["HTML", "CSS", "JavaScript"],
+                icon: "fa-briefcase",
+                gradient: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
+            },
+            {
+                title: "Chat Application",
+                tech: ["Socket.io", "Express", "React"],
+                icon: "fa-comments",
+                gradient: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)"
+            },
+            {
+                title: "API Dashboard",
+                tech: ["Vue.js", "D3.js", "Node.js"],
+                icon: "fa-chart-line",
+                gradient: "linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)"
+            }
+        ];
+
+        const codeChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789(){}[]<>;:,._-+=!@#$%^&*";
+
+        class CardStreamController {
+            constructor() {
+                this.container = document.getElementById("cardStream");
+                this.cardLine = document.getElementById("cardLine");
+                this.position = 0;
+                this.velocity = 80;
+                this.direction = -1;
+                this.isAnimating = true;
+                this.isDragging = false;
+                this.lastTime = performance.now();
+                this.lastMouseX = 0;
+                this.mouseVelocity = 0;
+                this.friction = 0.95;
+                this.minVelocity = 40;
+                this.containerWidth = 0;
+                this.cardLineWidth = 0;
+                this.init();
+            }
+
+            init() {
+                this.populateCardLine();
+                this.calculateDimensions();
+                this.setupEventListeners();
+                this.position = this.containerWidth;
+                this.updateCardPosition();
+                this.animate();
+                this.startPeriodicUpdates();
+            }
+
+            calculateDimensions() {
+                this.containerWidth = this.container.offsetWidth;
+                const cardWidth = 320;
+                const cardGap = 50;
+                const cardCount = this.cardLine.children.length;
+                this.cardLineWidth = (cardWidth + cardGap) * cardCount;
+            }
+
+            setupEventListeners() {
+                this.cardLine.addEventListener("mousedown", (e) => this.startDrag(e));
+                document.addEventListener("mousemove", (e) => this.onDrag(e));
+                document.addEventListener("mouseup", () => this.endDrag());
+                this.cardLine.addEventListener("touchstart", (e) => this.startDrag(e.touches[0]), { passive: false });
+                document.addEventListener("touchmove", (e) => this.onDrag(e.touches[0]), { passive: false });
+                document.addEventListener("touchend", () => this.endDrag());
+                this.cardLine.addEventListener("wheel", (e) => this.onWheel(e));
+                window.addEventListener("resize", () => this.calculateDimensions());
+            }
+
+            startDrag(e) {
+                e.preventDefault();
+                this.isDragging = true;
+                this.isAnimating = false;
+                this.lastMouseX = e.clientX;
+                this.mouseVelocity = 0;
+                const transform = window.getComputedStyle(this.cardLine).transform;
+                if (transform !== "none") {
+                    const matrix = new DOMMatrix(transform);
+                    this.position = matrix.m41;
+                }
+                this.cardLine.classList.add("dragging");
+            }
+
+            onDrag(e) {
+                if (!this.isDragging) return;
+                e.preventDefault();
+                const deltaX = e.clientX - this.lastMouseX;
+                this.position += deltaX;
+                this.mouseVelocity = deltaX * 60;
+                this.lastMouseX = e.clientX;
+                this.cardLine.style.transform = `translateX(${this.position}px)`;
+                this.updateCardClipping();
+            }
+
+            endDrag() {
+                if (!this.isDragging) return;
+                this.isDragging = false;
+                this.cardLine.classList.remove("dragging");
+                if (Math.abs(this.mouseVelocity) > this.minVelocity) {
+                    this.velocity = Math.abs(this.mouseVelocity);
+                    this.direction = this.mouseVelocity > 0 ? 1 : -1;
+                } else {
+                    this.velocity = 80;
+                }
+                this.isAnimating = true;
+            }
+
+            animate() {
+                const currentTime = performance.now();
+                const deltaTime = (currentTime - this.lastTime) / 1000;
+                this.lastTime = currentTime;
+
+                if (this.isAnimating && !this.isDragging) {
+                    if (this.velocity > this.minVelocity) {
+                        this.velocity *= this.friction;
+                    } else {
+                        this.velocity = Math.max(this.minVelocity, this.velocity);
+                    }
+                    this.position += this.velocity * this.direction * deltaTime;
+                    this.updateCardPosition();
+                }
+
+                requestAnimationFrame(() => this.animate());
+            }
+
+            updateCardPosition() {
+                if (this.position < -this.cardLineWidth) {
+                    this.position = this.containerWidth;
+                } else if (this.position > this.containerWidth) {
+                    this.position = -this.cardLineWidth;
+                }
+                this.cardLine.style.transform = `translateX(${this.position}px)`;
+                this.updateCardClipping();
+            }
+
+            onWheel(e) {
+                e.preventDefault();
+                this.position += e.deltaY > 0 ? 30 : -30;
+                this.updateCardPosition();
+            }
+
+            generateCode(width, height) {
+                const lines = [
+                    "const project = { name: 'Portfolio', status: 'active' };",
+                    "function render() { return <Component />; }",
+                    "import React from 'react'; export default App;",
+                    "const data = await fetch('/api/projects');",
+                    "useEffect(() => { loadData(); }, []);",
+                ];
+                let out = "";
+                for (let row = 0; row < height; row++) {
+                    let line = lines[row % lines.length];
+                    while (line.length < width) line += " " + lines[(row + 1) % lines.length];
+                    out += line.slice(0, width) + (row < height - 1 ? "\n" : "");
+                }
+                return out;
+            }
+
+            createCardWrapper(index) {
+                const project = projects[index % projects.length];
+                const wrapper = document.createElement("div");
+                wrapper.className = "card-wrapper";
+
+                // Normal card
+                const normalCard = document.createElement("div");
+                normalCard.className = "card card-normal";
+
+                // Card image placeholder with gradient
+                const cardImage = document.createElement("div");
+                cardImage.className = "card-image";
+                cardImage.style.background = project.gradient;
+                cardImage.style.display = "flex";
+                cardImage.style.alignItems = "center";
+                cardImage.style.justifyContent = "center";
+                
+                const icon = document.createElement("i");
+                icon.className = `fas ${project.icon}`;
+                icon.style.fontSize = "3rem";
+                icon.style.color = "rgba(255,255,255,0.8)";
+                cardImage.appendChild(icon);
+
+                // Card content
+                const content = document.createElement("div");
+                content.className = "card-content";
+
+                const title = document.createElement("div");
+                title.className = "card-title";
+                title.textContent = project.title;
+
+                const techDiv = document.createElement("div");
+                techDiv.className = "card-tech";
+                project.tech.forEach(t => {
+                    const tag = document.createElement("span");
+                    tag.className = "tech-tag";
+                    tag.textContent = t;
+                    techDiv.appendChild(tag);
+                });
+
+                content.appendChild(title);
+                content.appendChild(techDiv);
+                normalCard.appendChild(cardImage);
+                normalCard.appendChild(content);
+
+                // ASCII card
+                const asciiCard = document.createElement("div");
+                asciiCard.className = "card card-ascii";
+                const asciiContent = document.createElement("div");
+                asciiContent.className = "ascii-content";
+                asciiContent.textContent = this.generateCode(60, 25);
+                asciiCard.appendChild(asciiContent);
+
+                wrapper.appendChild(normalCard);
+                wrapper.appendChild(asciiCard);
+                return wrapper;
+            }
+
+            updateCardClipping() {
+                const scannerX = window.innerWidth / 2;
+                const scannerWidth = 6;
+                const scannerLeft = scannerX - scannerWidth / 2;
+                const scannerRight = scannerX + scannerWidth / 2;
+
+                document.querySelectorAll(".card-wrapper").forEach((wrapper) => {
+                    const rect = wrapper.getBoundingClientRect();
+                    const cardLeft = rect.left;
+                    const cardRight = rect.right;
+                    const cardWidth = rect.width;
+                    const normalCard = wrapper.querySelector(".card-normal");
+                    const asciiCard = wrapper.querySelector(".card-ascii");
+
+                    if (cardLeft < scannerRight && cardRight > scannerLeft) {
+                        const scannerIntersectLeft = Math.max(scannerLeft - cardLeft, 0);
+                        const scannerIntersectRight = Math.min(scannerRight - cardLeft, cardWidth);
+                        const normalClipRight = (scannerIntersectLeft / cardWidth) * 100;
+                        const asciiClipLeft = (scannerIntersectRight / cardWidth) * 100;
+                        normalCard.style.setProperty("--clip-right", `${normalClipRight}%`);
+                        asciiCard.style.setProperty("--clip-left", `${asciiClipLeft}%`);
+
+                        if (!wrapper.hasAttribute("data-scanned") && scannerIntersectLeft > 0) {
+                            wrapper.setAttribute("data-scanned", "true");
+                            const scanEffect = document.createElement("div");
+                            scanEffect.className = "scan-effect";
+                            wrapper.appendChild(scanEffect);
+                            setTimeout(() => scanEffect.remove(), 600);
+                        }
+                    } else {
+                        if (cardRight < scannerLeft) {
+                            normalCard.style.setProperty("--clip-right", "100%");
+                            asciiCard.style.setProperty("--clip-left", "100%");
+                        } else {
+                            normalCard.style.setProperty("--clip-right", "0%");
+                            asciiCard.style.setProperty("--clip-left", "0%");
+                        }
+                        wrapper.removeAttribute("data-scanned");
+                    }
+                });
+            }
+
+            populateCardLine() {
+                this.cardLine.innerHTML = "";
+                for (let i = 0; i < 18; i++) {
+                    this.cardLine.appendChild(this.createCardWrapper(i));
+                }
+            }
+
+            startPeriodicUpdates() {
+                const updateClipping = () => {
+                    this.updateCardClipping();
+                    requestAnimationFrame(updateClipping);
+                };
+                updateClipping();
+            }
+        }
+
+        // Simple particle system
+        class ParticleSystem {
+            constructor() {
+                this.canvas = document.getElementById("particleCanvas");
+                this.ctx = this.canvas.getContext("2d");
+                this.particles = [];
+                this.particleCount = 100;
+                this.init();
+            }
+
+            init() {
+                this.resize();
+                for (let i = 0; i < this.particleCount; i++) {
+                    this.particles.push(this.createParticle());
+                }
+                this.animate();
+                window.addEventListener("resize", () => this.resize());
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = 220;
+            }
+
+            createParticle() {
+                return {
+                    x: Math.random() * window.innerWidth,
+                    y: Math.random() * 220,
+                    vx: (Math.random() - 0.3) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.2,
+                    radius: Math.random() * 2 + 0.5,
+                    alpha: Math.random() * 0.5 + 0.2
+                };
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                this.particles.forEach(p => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    
+                    if (p.x > this.canvas.width + 10) p.x = -10;
+                    if (p.x < -10) p.x = this.canvas.width + 10;
+                    if (p.y > this.canvas.height + 10) p.y = -10;
+                    if (p.y < -10) p.y = this.canvas.height + 10;
+
+                    this.ctx.beginPath();
+                    this.ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    this.ctx.fillStyle = `rgba(192, 132, 252, ${p.alpha})`;
+                    this.ctx.fill();
+                });
+
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // Scanner line
+        class ScannerLine {
+            constructor() {
+                this.canvas = document.getElementById("scannerCanvas");
+                this.ctx = this.canvas.getContext("2d");
+                this.init();
+            }
+
+            init() {
+                this.resize();
+                this.animate();
+                window.addEventListener("resize", () => this.resize());
+            }
+
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = 280;
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                const x = this.canvas.width / 2;
+                const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+                gradient.addColorStop(0, "rgba(192, 132, 252, 0)");
+                gradient.addColorStop(0.2, "rgba(192, 132, 252, 0.8)");
+                gradient.addColorStop(0.5, "rgba(192, 132, 252, 1)");
+                gradient.addColorStop(0.8, "rgba(192, 132, 252, 0.8)");
+                gradient.addColorStop(1, "rgba(192, 132, 252, 0)");
+
+                // Glow
+                this.ctx.shadowColor = "rgba(192, 132, 252, 0.8)";
+                this.ctx.shadowBlur = 20;
+                
+                this.ctx.beginPath();
+                this.ctx.moveTo(x, 0);
+                this.ctx.lineTo(x, this.canvas.height);
+                this.ctx.strokeStyle = gradient;
+                this.ctx.lineWidth = 3;
+                this.ctx.stroke();
+
+                // Core line
+                this.ctx.shadowBlur = 0;
+                this.ctx.beginPath();
+                this.ctx.moveTo(x, 0);
+                this.ctx.lineTo(x, this.canvas.height);
+                this.ctx.strokeStyle = "rgba(255, 255, 255, 0.9)";
+                this.ctx.lineWidth = 1;
+                this.ctx.stroke();
+
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+
+        // Initialize
+        new CardStreamController();
+        new ParticleSystem();
+        new ScannerLine();
+    </script>
+</body>
+</html>

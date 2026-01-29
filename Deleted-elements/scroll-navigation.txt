@@ -1,0 +1,14 @@
+================================================================================
+SCROLL-BASED NAVIGATION - Saved before converting to full-page sections
+================================================================================
+Saved on: January 29, 2026
+Source: Foreground-locked/devport.css and devport.js
+
+================================================================================
+TO RESTORE SCROLLING BEHAVIOR:
+1. Remove the full-page section CSS (see below)
+2. Restore the scroll-based JS navigation
+================================================================================
+
+The site originally scrolled between sections. This backup is in case you want
+to revert from the full-page section-based navigation.

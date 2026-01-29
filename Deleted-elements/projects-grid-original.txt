@@ -1,0 +1,41 @@
+================================================================================
+ORIGINAL PROJECTS GRID SECTION
+================================================================================
+Saved on: January 29, 2026
+Replaced with: Projects Reel (horizontal card carousel with scanner effect)
+Source: Foreground-locked/devport.html
+
+================================================================================
+HTML (Projects Section - lines 631-733)
+================================================================================
+
+        <!-- Projects Section -->
+        <section id="projects" class="section projects-section">
+            <div class="section-container">
+                <div class="section-header">
+                    <span class="section-number">04</span>
+                    <h2 class="section-title">
+                        <span class="title-bracket">&lt;</span>
+                        <span class="title-text">Projects</span>
+                        <span class="title-bracket">/&gt;</span>
+                    </h2>
+                    <div class="section-line"></div>
+                </div>
+                
+                <div class="projects-grid">
+                    <!-- E-Commerce Platform -->
+                    <div class="project-card">...</div>
+                    <!-- Task Management App -->
+                    <div class="project-card">...</div>
+                    <!-- Blog Platform -->
+                    <div class="project-card">...</div>
+                </div>
+            </div>
+        </section>
+
+================================================================================
+PROJECTS DATA:
+1. E-Commerce Platform - React, Node.js, MongoDB
+2. Task Management App - React, Firebase, TypeScript  
+3. Blog Platform - Next.js, Prisma, PostgreSQL
+================================================================================

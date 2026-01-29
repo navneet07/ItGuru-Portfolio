@@ -1,0 +1,134 @@
+================================================================================
+LANGUAGE TOGGLE (AR/EN Switcher) - Removed from devport
+================================================================================
+This element switches between Arabic (RTL) and English (LTR) layouts.
+Removed on: January 29, 2026
+Source: Foreground-locked/devport
+
+================================================================================
+HTML (from devport.html - inside .nav-controls div)
+================================================================================
+
+<button class="lang-toggle" id="langToggle" title="Toggle Language">
+    <i class="fas fa-language"></i>
+    <span class="lang-text">AR</span>
+</button>
+
+================================================================================
+CSS (from devport.css)
+================================================================================
+
+/* Lines 291-312 - Main toggle styles */
+.lang-toggle,
+.theme-toggle,
+.menu-toggle {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.lang-toggle:hover,
+.theme-toggle:hover {
+    background: var(--bg-hover);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* Lines 1824-1828 - Responsive styles */
+.lang-toggle,
+.theme-toggle {
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+}
+
+================================================================================
+JAVASCRIPT (from devport.js)
+================================================================================
+
+/* AppState property */
+currentLang: 'en',
+
+/* Lines 33-96 - Language functions */
+function initLanguage() {
+    const langToggle = document.getElementById('langToggle');
+    if (langToggle) {
+        langToggle.addEventListener('click', toggleLanguage);
+    }
+    setLanguage(AppState.currentLang);
+}
+
+function toggleLanguage() {
+    const newLang = AppState.currentLang === 'en' ? 'ar' : 'en';
+    setLanguage(newLang);
+    localStorage.setItem('portfolio-lang', newLang);
+}
+
+function setLanguage(lang) {
+    AppState.currentLang = lang;
+    const html = document.documentElement;
+    const body = document.body;
+    
+    if (lang === 'ar') {
+        html.setAttribute('lang', 'ar');
+        html.setAttribute('dir', 'rtl');
+        body.setAttribute('data-lang', 'ar');
+        body.setAttribute('data-dir', 'rtl');
+    } else {
+        html.setAttribute('lang', 'en');
+        html.setAttribute('dir', 'ltr');
+        body.setAttribute('data-lang', 'en');
+        body.setAttribute('data-dir', 'ltr');
+    }
+    updateLanguageUI();
+}
+
+function updateLanguageUI() {
+    const textElements = document.querySelectorAll('[data-text-en], [data-text-ar]');
+    textElements.forEach(element => {
+        const enText = element.getAttribute('data-text-en');
+        const arText = element.getAttribute('data-text-ar');
+        if (AppState.currentLang === 'ar' && arText) {
+            element.textContent = arText;
+        } else if (AppState.currentLang === 'en' && enText) {
+            element.textContent = enText;
+        }
+    });
+    
+    const placeholderElements = document.querySelectorAll('[data-placeholder-en], [data-placeholder-ar]');
+    placeholderElements.forEach(element => {
+        const enPlaceholder = element.getAttribute('data-placeholder-en');
+        const arPlaceholder = element.getAttribute('data-placeholder-ar');
+        if (AppState.currentLang === 'ar' && arPlaceholder) {
+            element.setAttribute('placeholder', arPlaceholder);
+        } else if (AppState.currentLang === 'en' && enPlaceholder) {
+            element.setAttribute('placeholder', enPlaceholder);
+        }
+    });
+    
+    const langToggle = document.getElementById('langToggle');
+    if (langToggle) {
+        const langText = langToggle.querySelector('.lang-text');
+        if (langText) {
+            langText.textContent = AppState.currentLang === 'en' ? 'AR' : 'EN';
+        }
+    }
+}
+
+/* Also called in initializeApp(): */
+initLanguage();
+updateLanguageUI();
+
+================================================================================
+TO RESTORE:
+1. Add HTML button back inside .nav-controls div (before theme-toggle)
+2. CSS is shared with theme-toggle, just need .lang-toggle selector
+3. Add JS functions back and call initLanguage() in initializeApp()
+================================================================================
