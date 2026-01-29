@@ -1,10 +1,14 @@
-   <header class="site-header">
-    <h1 class="sr-only">Professional Experience</h1>
+  <header class="site-header">
+    <h1 class="sr-only">Scrollnapping animations</h1>
 
+    <!-- Because Chrome crashes if an overflow is set on the fieldset while a named timeline is on a child element -->
+    <!-- ¯\_(ツ)_/¯ -->
     <div class="fieldset-wrapper">
       <fieldset>
         <legend class="sr-only">Effects</legend>
-        <input type="radio" id="blink-effect" name="effect" value="blink" class="sr-only">
+
+        <!-- radio buttons for each of the @keyframes above -->
+        <input type="radio" id="blink-effect" name="effect" value="blink" checked class="sr-only">
         <label for="blink-effect">Blink</label>
 
         <input type="radio" id="horizontal-scroll-effect" name="effect" value="horizontal-scroll" class="sr-only">
@@ -13,188 +17,82 @@
         <input type="radio" id="backwards-scroll-effect" name="effect" value="backwards-scroll" class="sr-only">
         <label for="backwards-scroll-effect">Backwards scroll</label>
 
-        <input type="radio" id="zoom-scroll-effect" name="effect" value="zoom-scroll" checked class="sr-only">
+        <input type="radio" id="zoom-scroll-effect" name="effect" value="zoom-scroll" class="sr-only">
         <label for="zoom-scroll-effect">Zoom scroll</label>
       </fieldset>
     </div>
 
     <nav>
       <ul class="indicator">
-        <li><a href="#walmart"><span class="sr-only">Walmart</span></a></li>
-        <li><a href="#microsoft"><span class="sr-only">Microsoft</span></a></li>
-        <li><a href="#sonicwall"><span class="sr-only">SonicWall</span></a></li>
-        <li><a href="#asia-society"><span class="sr-only">Asia Society</span></a></li>
-        <li><a href="#bloom-energy"><span class="sr-only">Bloom Energy</span></a></li>
-        <li><a href="#compass"><span class="sr-only">Compass</span></a></li>
-        <li><a href="#satellite"><span class="sr-only">Satellite Healthcare</span></a></li>
-        <li><a href="#alarm"><span class="sr-only">Alarm.com</span></a></li>
-        <li><a href="#baseline"><span class="sr-only">Baseline</span></a></li>
+        <li><a href="#snapping"><span class="sr-only">Snapping</span></a></li>
+        <li><a href="#scrolling"><span class="sr-only">Scrolling</span></a></li>
+        <li><a href="#layout"><span class="sr-only">Layout</span></a></li>
+        <li><a href="#transition"><span class="sr-only">Transition</span></a></li>
+        <li><a href="#caveats"><span class="sr-only">Caveats</span></a></li>
       </ul>
     </nav>
   </header>
-
   <main>
-    <!-- 1. Walmart Global Tech -->
-    <section id="walmart" class="section">
+    <section id="snapping" class="section">
       <div class="content">
-        <h2><strong>Walmart Global Tech</strong> <em>Sunnyvale, CA</em></h2>
-        <p class="role">Lead Senior Analyst / Systems Engineer</p>
-        <p class="duration">Dec 2021 – Present</p>
+        <h2><strong>First</strong>, we set up the <em>snapping</em> points</h2>
 
         <div class="text">
-          <ul>
-            <li>Lead day-to-day operation of mission-critical IT systems supporting large-scale enterprise environments</li>
-            <li>Serve as primary escalation lead during high-severity incidents</li>
-            <li>Own system reliability through preventative maintenance, monitoring, and performance metrics (KTLO)</li>
-            <li>Administer Windows/Linux systems, Active Directory, Exchange, VMware ESXi/vSphere</li>
-            <li>Design and execute phased patching and change-management strategies using SCCM and WSUS</li>
-            <li>Develop technical documentation and operational runbooks</li>
-            <li>Mentor junior engineers and analysts</li>
-          </ul>
-          <p class="tech-stack"><strong>Technologies:</strong> Windows, Linux, Active Directory, Exchange, VMware ESXi/vSphere, SCCM, WSUS, ITIL</p>
+          <img src="https://assets.codepen.io/197359/flower-white.png" alt="">
+          <p>We set the scrolling element, in this case our <code class="selector">HTML</code> element, to forcibly snap to the Y axis by using <code class="property">scroll-snap-type: y mandatory</code>.</p>
+
+          <p>And then we set <code class="selector">section</code> as the snapping elements by using <code class="property">scroll-snap-align: start</code>.</p>
         </div>
       </div>
     </section>
-
-    <!-- 2. Microsoft -->
-    <section id="microsoft" class="section">
+    <section id="scrolling" class="section">
       <div class="content">
-        <h2><strong>Microsoft</strong> <em>Remote</em></h2>
-        <p class="role">Technical Program Manager (Contract)</p>
-        <p class="duration">Aug 2021 – Jan 2022</p>
+        <h2><strong>Next</strong>, we set up the <em>scrolling</em> animation</h2>
 
         <div class="text">
-          <ul>
-            <li>Coordinated cross-functional engineering and IT initiatives in fast-paced environments</li>
-            <li>Liaison between technical teams and stakeholders to translate requirements into execution plans</li>
-            <li>Tracked risks, dependencies, and timelines under aggressive schedules</li>
-          </ul>
-          <p class="tech-stack"><strong>Technologies:</strong> Cross-functional coordination, Project Management, Stakeholder Communication</p>
+          <img src="https://assets.codepen.io/197359/flower-yellow.png" alt="">
+          <p>We track the <code class="property">view()</code> position of the <code class="selector">section</code> elements using the named timeline <code class="property">view-timeline: --section;</code>. We had previously set the <code class="property">timeline-scope: --section</code> up in our <code class="selector">HTML</code> element, so we can access it from anywhere in the document.</p>
+
+          <p>We animate the <code class="selector">.content</code> children using <code class="property">animation-timeline: --section;</code>. The <code class="selector">.content</code> element will now animate based on its parent <code class="selector">section</code>'s position. This is important due to how we're handling the layout in the next section.</p>
         </div>
       </div>
     </section>
-
-    <!-- 3. SonicWall -->
-    <section id="sonicwall" class="section">
+    <section id="layout" class="section">
       <div class="content">
-        <h2><strong>SonicWall</strong> <em>Milpitas, CA</em></h2>
-        <p class="role">Information Systems Engineer</p>
-        <p class="duration">Mar 2021 – Aug 2021</p>
+        <h2><strong>Then</strong>, we position a <em>fixed</em> layout</h2>
 
         <div class="text">
-          <ul>
-            <li>Supported enterprise network and security infrastructure including firewalls</li>
-            <li>Participated in incident response, troubleshooting, and system hardening</li>
-            <li>Documented operational procedures to improve reliability</li>
-          </ul>
-          <p class="tech-stack"><strong>Technologies:</strong> Firewalls, Enterprise Networking, Security Infrastructure, System Integrations</p>
+          <img src="https://assets.codepen.io/197359/flower-blue.png" alt="">
+          <p>We set the <code class="selector">.content</code> elements to <code class="property">position: fixed</code>, so they're removed from the normal document flow and stack on top of each other, giving them a solid background, so only one is visible at a time.</p>
+
+          <p>Their parent <code class="selector">section</code>s are positioned as normal in the layer below, taking up space, scroll-snapping, and powering the <code class="property">animation-timeline</code>.</p>
         </div>
       </div>
     </section>
-
-    <!-- 4. Asia Society -->
-    <section id="asia-society" class="section">
+    <section id="transition" class="section">
       <div class="content">
-        <h2><strong>Asia Society</strong> <em>New York, NY</em></h2>
-        <p class="role">Help Desk Support Engineer</p>
-        <p class="duration">Oct 2018 – Mar 2021</p>
+        <h2><strong>Finally</strong>, we create the <em>transition</em> effects</h2>
 
         <div class="text">
-          <ul>
-            <li>Delivered Tier 2/3 IT support across endpoints, networking, VOIP, and enterprise applications</li>
-            <li>Supported executive leadership with high-priority, time-sensitive technical issues</li>
-            <li>Participated in on-call rotations for continuity of operations</li>
-          </ul>
-          <p class="tech-stack"><strong>Technologies:</strong> Endpoint Management, Networking, VOIP, Enterprise Applications, Tier 2/3 Support</p>
+          <img src="https://assets.codepen.io/197359/flower-red.png" alt="">
+          <p>By setting the <code class="selector">.content</code> elements to <code class="property">position: fixed</code>, we can now transition between them without a visible scrolling movement.</p>
+
+          <p>We create a normal <code class="selector">@keyframe</code> animation to our liking to transition between them. Check the navigation menu to see different effects.</p>
         </div>
       </div>
     </section>
-
-    <!-- 5. Bloom Energy -->
-    <section id="bloom-energy" class="section">
+    <section id="caveats" class="section">
       <div class="content">
-        <h2><strong>Bloom Energy</strong> <em>Sunnyvale, CA</em></h2>
-        <p class="role">Desktop Support Engineer</p>
-        <p class="duration">Oct 2017 – Oct 2018</p>
+        <h2><strong>Caveats</strong></h2>
 
         <div class="text">
+          <img src="https://assets.codepen.io/197359/flower-purple.png" alt="">
           <ul>
-            <li>Supported IT infrastructure in mission-critical energy technology environment</li>
-            <li>Coordinated deployment and lifecycle management of Dell, Apple, and HP systems</li>
-            <li>Resolved hardware, software, and connectivity issues to maintain operational uptime</li>
-          </ul>
-          <p class="tech-stack"><strong>Technologies:</strong> Dell, Apple, HP Systems, Hardware/Software Support, Endpoint Management</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 6. Compass Manufacturing Services -->
-    <section id="compass" class="section">
-      <div class="content">
-        <h2><strong>Compass Manufacturing</strong> <em>Fremont, CA</em></h2>
-        <p class="role">IT Project Manager</p>
-        <p class="duration">Aug 2017 – Oct 2017</p>
-
-        <div class="text">
-          <ul>
-            <li>Led 10 helpdesk technicians and 430+ installation technicians across large-scale deployments</li>
-            <li>Managed scheduling and execution of 900+ installations under tight timelines</li>
-            <li>Oversaw deployment of POS systems, servers, routers, and network infrastructure</li>
-          </ul>
-          <p class="tech-stack"><strong>Technologies:</strong> POS Systems, Servers, Routers, Network Infrastructure, Project Management</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 7. Satellite Healthcare / WellBound -->
-    <section id="satellite" class="section">
-      <div class="content">
-        <h2><strong>Satellite Healthcare</strong> <em>Redwood City, CA</em></h2>
-        <p class="role">Active Directory Administrator</p>
-        <p class="duration">May 2017 – Dec 2017</p>
-
-        <div class="text">
-          <ul>
-            <li>Administered Active Directory and Exchange in regulated healthcare environment</li>
-            <li>Managed identity, access controls, and user migrations across sites</li>
-            <li>Tracked incidents and requests using ITSM tools aligned with ITIL practices</li>
-          </ul>
-          <p class="tech-stack"><strong>Technologies:</strong> Active Directory, Exchange, Identity Management, ITSM Tools, ITIL</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 8. Alarm.com -->
-    <section id="alarm" class="section">
-      <div class="content">
-        <h2><strong>Alarm.com</strong> <em>Remote</em></h2>
-        <p class="role">Technical Product Support Specialist</p>
-        <p class="duration">Sep 2016 – Aug 2017</p>
-
-        <div class="text">
-          <ul>
-            <li>Provided Tier 2/3 support in 24x7 mission-critical security platform environment</li>
-            <li>Analyzed logs, diagnosed issues, and escalated defects to engineering teams</li>
-            <li>Contributed SQL scripts and reporting tools for operational insights</li>
-          </ul>
-          <p class="tech-stack"><strong>Technologies:</strong> SQL, Logging/Diagnostics, 24x7 Operations, Security Platforms</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 9. Baseline Financial Services -->
-    <section id="baseline" class="section">
-      <div class="content">
-        <h2><strong>Baseline Financial</strong> <em>San Jose, CA</em></h2>
-        <p class="role">Junior System Administrator</p>
-        <p class="duration">Aug 2014 – Aug 2015</p>
-
-        <div class="text">
-          <ul>
-            <li>Managed VMware ESXi hosts, virtual machines, storage, and networking</li>
-            <li>Supported desktop, server, and network infrastructure installations</li>
-          </ul>
-          <p class="tech-stack"><strong>Technologies:</strong> VMware ESXi, Virtualization, Storage, Networking, Server Administration</p>
+            <li>Scrolling animations are not currently available in Firefox. This demo is using a polyfill.</li>
+            <li>This layout is fragile due to the use of <code class="property">position: fixed</code>. You need to carefully manage stacking contexts.</li>
+            <li>Snapping points have their own caveats, such as content taller than the viewport becoming inaccessible, along with the general annoyance of scrolljacking.</li>
+            <li>The <code class="selector">blink</code> effect uses the <code class="property">contrast()</code> filter, which modifies the colors of the entire section. Thus, the background is set to black (or white), ensuring that it appears unchanged during transitions due to already being at maximum contrast.</li>
+            </ul>
         </div>
       </div>
     </section>
@@ -202,5 +100,5 @@
   </main>
 
   <footer>
-    <p>10+ Years of IT Excellence <span class="emoji">🚀</span></p>
+    <p>That's it <span class="emoji">🌸</span></p>
   </footer>
