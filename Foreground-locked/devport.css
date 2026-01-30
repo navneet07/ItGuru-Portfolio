@@ -2675,6 +2675,10 @@ img {
     background: linear-gradient(135deg, #f43f5e, #e11d48);
 }
 
+.exp-detail-symbol.projects {
+    background: linear-gradient(135deg, #8b5cf6, #a855f7);
+}
+
 .exp-detail-info {
     flex: 1;
 }
