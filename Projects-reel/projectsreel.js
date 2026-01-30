@@ -11,8 +11,8 @@ class CardStreamController {
     this.speedIndicator = document.getElementById("speedValue");
 
     this.position = 0;
-    this.velocity = 120;
-    this.direction = -1;
+    this.velocity = 80; // Slower for better viewing
+    this.direction = -1; // Move left (oldest to newest)
     this.isAnimating = true;
     this.isDragging = false;
 
@@ -144,10 +144,28 @@ class CardStreamController {
   updateCardPosition() {
     const containerWidth = this.containerWidth;
     const cardLineWidth = this.cardLineWidth;
-
-    if (this.position < -cardLineWidth) {
+    const cardWidth = 400;
+    const cardGap = 60;
+    const totalCards = 6;
+    
+    // Calculate position where Walmart (last card) is centered
+    const walmartStopPosition = -(cardWidth + cardGap) * (totalCards - 1) + containerWidth / 2 - cardWidth / 2;
+    
+    // Stop at Walmart before cycling through
+    if (this.direction === -1 && this.position <= walmartStopPosition) {
+      this.position = walmartStopPosition;
+      this.isAnimating = false;
+      // Pause briefly then restart from beginning
+      setTimeout(() => {
+        this.position = containerWidth / 2 - cardWidth / 2; // Start with first card centered
+        this.isAnimating = true;
+      }, 2000);
+    }
+    
+    // Wrap around for manual scrolling
+    if (this.position < -cardLineWidth - 200) {
       this.position = containerWidth;
-    } else if (this.position > containerWidth) {
+    } else if (this.position > containerWidth + 200) {
       this.position = -cardLineWidth;
     }
 
@@ -319,18 +337,22 @@ class CardStreamController {
     const normalCard = document.createElement("div");
     normalCard.className = "card card-normal";
 
-    const cardImages = [
-      "https://cdn.prod.website-files.com/68789c86c8bc802d61932544/689f20b55e654d1341fb06f8_4.1.png",
-      "https://cdn.prod.website-files.com/68789c86c8bc802d61932544/689f20b5a080a31ee7154b19_1.png",
-      "https://cdn.prod.website-files.com/68789c86c8bc802d61932544/689f20b5c1e4919fd69672b8_3.png",
-      "https://cdn.prod.website-files.com/68789c86c8bc802d61932544/689f20b5f6a5e232e7beb4be_2.png",
-      "https://cdn.prod.website-files.com/68789c86c8bc802d61932544/689f20b5bea2f1b07392d936_4.png",
+    // Career logos in chronological order (oldest to current)
+    const careerLogos = [
+      { src: "../Logos/alarm.jpeg", name: "Alarm.com", year: "2016-2017" },
+      { src: "../Logos/bloom.png", name: "Bloom Energy", year: "2017-2018" },
+      { src: "../Logos/asiasociety.jpg", name: "Asia Society", year: "2018-2021" },
+      { src: "../Logos/sonicwall.jpg", name: "SonicWall", year: "2021" },
+      { src: "../Logos/microsoft.webp", name: "Microsoft", year: "2021-2022" },
+      { src: "../Logos/walmart.jpg", name: "Walmart", year: "2021-Present", current: true },
     ];
 
+    const logoData = careerLogos[index % careerLogos.length];
+    
     const cardImage = document.createElement("img");
     cardImage.className = "card-image";
-    cardImage.src = cardImages[index % cardImages.length];
-    cardImage.alt = "Credit Card";
+    cardImage.src = logoData.src;
+    cardImage.alt = logoData.name;
 
     cardImage.onerror = () => {
       const canvas = document.createElement("canvas");
@@ -438,11 +460,15 @@ class CardStreamController {
 
   populateCardLine() {
     this.cardLine.innerHTML = "";
-    const cardsCount = 30;
+    // 6 career logos - chronological order
+    const cardsCount = 6;
     for (let i = 0; i < cardsCount; i++) {
       const cardWrapper = this.createCardWrapper(i);
       this.cardLine.appendChild(cardWrapper);
     }
+    // Set initial position to start from the first card (oldest)
+    this.position = 0;
+    this.stopAtWalmart = true;
   }
 
   startPeriodicUpdates() {
