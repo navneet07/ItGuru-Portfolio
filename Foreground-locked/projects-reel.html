@@ -200,49 +200,56 @@
         </div>
         <div class="drag-hint">
             <i class="fas fa-hand-pointer"></i>
-            <span>Drag to explore projects</span>
+            <span>Drag to explore career journey</span>
         </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // Project data
-        const projects = [
+        // Career data - chronological order (oldest to current)
+        const careers = [
             {
-                title: "E-Commerce Platform",
-                tech: ["React", "Node.js", "MongoDB"],
-                icon: "fa-shopping-cart",
-                gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+                title: "Alarm.com",
+                role: "Technical Product Support",
+                period: "2016-2017",
+                logo: "../Logos/alarm.jpeg",
+                gradient: "linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%)"
             },
             {
-                title: "Task Management App",
-                tech: ["React", "Firebase", "TypeScript"],
-                icon: "fa-tasks",
-                gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+                title: "Bloom Energy",
+                role: "Desktop Support Engineer",
+                period: "2017-2018",
+                logo: "../Logos/bloom.png",
+                gradient: "linear-gradient(135deg, #2d8659 0%, #4caf50 100%)"
             },
             {
-                title: "Blog Platform",
-                tech: ["Next.js", "Prisma", "PostgreSQL"],
-                icon: "fa-blog",
-                gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+                title: "Asia Society",
+                role: "Lead Help Desk Support",
+                period: "2018-2021",
+                logo: "../Logos/asiasociety.jpg",
+                gradient: "linear-gradient(135deg, #c41e3a 0%, #e53935 100%)"
             },
             {
-                title: "Portfolio Website",
-                tech: ["HTML", "CSS", "JavaScript"],
-                icon: "fa-briefcase",
-                gradient: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
+                title: "SonicWall",
+                role: "Systems Engineer",
+                period: "2021",
+                logo: "../Logos/sonicwall.jpg",
+                gradient: "linear-gradient(135deg, #f57c00 0%, #ff9800 100%)"
             },
             {
-                title: "Chat Application",
-                tech: ["Socket.io", "Express", "React"],
-                icon: "fa-comments",
-                gradient: "linear-gradient(135deg, #fa709a 0%, #fee140 100%)"
+                title: "Microsoft",
+                role: "Technical Program Manager",
+                period: "2021-2022",
+                logo: "../Logos/microsoft.webp",
+                gradient: "linear-gradient(135deg, #00a4ef 0%, #7fba00 100%)"
             },
             {
-                title: "API Dashboard",
-                tech: ["Vue.js", "D3.js", "Node.js"],
-                icon: "fa-chart-line",
-                gradient: "linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)"
+                title: "Walmart",
+                role: "Lead Senior Analyst",
+                period: "2021-Present",
+                logo: "../Logos/walmart.jpg",
+                gradient: "linear-gradient(135deg, #0071ce 0%, #ffc220 100%)",
+                current: true
             }
         ];
 
@@ -353,11 +360,31 @@
             }
 
             updateCardPosition() {
-                if (this.position < -this.cardLineWidth) {
+                const cardWidth = 320;
+                const cardGap = 50;
+                const totalCards = 6;
+                
+                // Calculate position where Walmart (last card, index 5) is centered
+                const walmartStopPosition = -(cardWidth + cardGap) * (totalCards - 1) + this.containerWidth / 2 - cardWidth / 2;
+                
+                // Stop at Walmart before cycling through
+                if (this.direction === -1 && this.position <= walmartStopPosition) {
+                    this.position = walmartStopPosition;
+                    this.isAnimating = false;
+                    // Pause 3 seconds at Walmart, then restart from beginning
+                    setTimeout(() => {
+                        this.position = this.containerWidth / 2 - cardWidth / 2; // Start with first card centered
+                        this.isAnimating = true;
+                    }, 3000);
+                }
+                
+                // Wrap around for manual scrolling
+                if (this.position < -this.cardLineWidth - 200) {
                     this.position = this.containerWidth;
-                } else if (this.position > this.containerWidth) {
+                } else if (this.position > this.containerWidth + 200) {
                     this.position = -this.cardLineWidth;
                 }
+                
                 this.cardLine.style.transform = `translateX(${this.position}px)`;
                 this.updateCardClipping();
             }
@@ -386,7 +413,7 @@
             }
 
             createCardWrapper(index) {
-                const project = projects[index % projects.length];
+                const career = careers[index % careers.length];
                 const wrapper = document.createElement("div");
                 wrapper.className = "card-wrapper";
 
@@ -394,19 +421,25 @@
                 const normalCard = document.createElement("div");
                 normalCard.className = "card card-normal";
 
-                // Card image placeholder with gradient
-                const cardImage = document.createElement("div");
-                cardImage.className = "card-image";
-                cardImage.style.background = project.gradient;
-                cardImage.style.display = "flex";
-                cardImage.style.alignItems = "center";
-                cardImage.style.justifyContent = "center";
+                // Card image - company logo
+                const cardImageContainer = document.createElement("div");
+                cardImageContainer.className = "card-image";
+                cardImageContainer.style.background = career.gradient;
+                cardImageContainer.style.display = "flex";
+                cardImageContainer.style.alignItems = "center";
+                cardImageContainer.style.justifyContent = "center";
+                cardImageContainer.style.padding = "10px";
                 
-                const icon = document.createElement("i");
-                icon.className = `fas ${project.icon}`;
-                icon.style.fontSize = "3rem";
-                icon.style.color = "rgba(255,255,255,0.8)";
-                cardImage.appendChild(icon);
+                const logoImg = document.createElement("img");
+                logoImg.src = career.logo;
+                logoImg.alt = career.title;
+                logoImg.style.maxWidth = "80%";
+                logoImg.style.maxHeight = "80%";
+                logoImg.style.objectFit = "contain";
+                logoImg.style.borderRadius = "8px";
+                logoImg.style.background = "rgba(255,255,255,0.9)";
+                logoImg.style.padding = "8px";
+                cardImageContainer.appendChild(logoImg);
 
                 // Card content
                 const content = document.createElement("div");
@@ -414,20 +447,26 @@
 
                 const title = document.createElement("div");
                 title.className = "card-title";
-                title.textContent = project.title;
+                title.textContent = career.title;
 
-                const techDiv = document.createElement("div");
-                techDiv.className = "card-tech";
-                project.tech.forEach(t => {
-                    const tag = document.createElement("span");
-                    tag.className = "tech-tag";
-                    tag.textContent = t;
-                    techDiv.appendChild(tag);
-                });
+                const roleDiv = document.createElement("div");
+                roleDiv.className = "card-tech";
+                
+                const roleTag = document.createElement("span");
+                roleTag.className = "tech-tag";
+                roleTag.textContent = career.role;
+                roleDiv.appendChild(roleTag);
+                
+                const periodTag = document.createElement("span");
+                periodTag.className = "tech-tag";
+                periodTag.style.background = career.current ? "rgba(74, 222, 128, 0.3)" : "rgba(148, 163, 184, 0.2)";
+                periodTag.style.color = career.current ? "#4ade80" : "#94a3b8";
+                periodTag.textContent = career.period;
+                roleDiv.appendChild(periodTag);
 
                 content.appendChild(title);
-                content.appendChild(techDiv);
-                normalCard.appendChild(cardImage);
+                content.appendChild(roleDiv);
+                normalCard.appendChild(cardImageContainer);
                 normalCard.appendChild(content);
 
                 // ASCII card
@@ -487,7 +526,8 @@
 
             populateCardLine() {
                 this.cardLine.innerHTML = "";
-                for (let i = 0; i < 18; i++) {
+                // 6 career cards - chronological order
+                for (let i = 0; i < 6; i++) {
                     this.cardLine.appendChild(this.createCardWrapper(i));
                 }
             }
