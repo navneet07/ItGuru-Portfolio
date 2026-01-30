@@ -816,3 +816,92 @@ function closeExpDetail() {
 // Make functions globally available
 window.openExpDetail = openExpDetail;
 window.closeExpDetail = closeExpDetail;
+
+// ==================== Reel Modal ====================
+function initReelModal() {
+    const modal = document.getElementById('reelModal');
+    const backdrop = document.getElementById('reelModalBackdrop');
+    const closeBtn = document.getElementById('reelModalClose');
+    const content = document.getElementById('reelModalContent');
+    
+    if (!modal || !backdrop) return;
+    
+    // Close modal handlers
+    const closeModal = () => {
+        modal.classList.remove('visible');
+        backdrop.classList.remove('visible');
+    };
+    
+    closeBtn?.addEventListener('click', closeModal);
+    backdrop?.addEventListener('click', closeModal);
+    
+    // Listen for messages from iframe
+    window.addEventListener('message', (event) => {
+        if (event.data.type === 'openReelModal') {
+            const career = event.data.career;
+            
+            // Build skills circles
+            const skillsHtml = (career.skills || []).map(skill => {
+                const circumference = 2 * Math.PI * 24;
+                const offset = circumference - (skill.value / 100) * circumference;
+                return `
+                    <div class="modal-skill-circle">
+                        <div class="modal-circle-progress">
+                            <svg viewBox="0 0 54 54">
+                                <circle class="bg" cx="27" cy="27" r="24"></circle>
+                                <circle class="progress" cx="27" cy="27" r="24" 
+                                    stroke="${skill.color}" 
+                                    stroke-dasharray="${circumference}" 
+                                    stroke-dashoffset="${offset}"></circle>
+                            </svg>
+                            <span class="value">${skill.value}%</span>
+                        </div>
+                        <span class="modal-skill-label">${skill.name}</span>
+                    </div>
+                `;
+            }).join('');
+            
+            // Build role summaries
+            const summariesHtml = (career.summaries || []).map(item => `
+                <div class="modal-role-item">
+                    <div class="modal-role-icon ${item.color}">
+                        <i class="fas ${item.icon}"></i>
+                    </div>
+                    <div>
+                        <div class="modal-role-info-title">${item.title}</div>
+                        <div class="modal-role-info-sub">${item.sub}</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            content.innerHTML = `
+                <div class="modal-skills-report">
+                    <div class="modal-skills-header">
+                        <span class="modal-skills-title">Skills Report</span>
+                        <span class="modal-type-badge">${career.type === 'career' ? 'Career' : 'Project'}</span>
+                    </div>
+                    <div class="modal-skills-circles">
+                        ${skillsHtml || '<span style="color: rgba(255,255,255,0.5);">No skills data</span>'}
+                    </div>
+                </div>
+                <div class="modal-role-summary">
+                    <div class="modal-role-header">
+                        <span class="modal-role-title">Role Summary</span>
+                        <span class="modal-role-period">${career.dateRange}</span>
+                    </div>
+                    ${summariesHtml || '<div style="color: rgba(255,255,255,0.5);">No summary data</div>'}
+                </div>
+            `;
+            
+            modal.classList.add('visible');
+            backdrop.classList.add('visible');
+        }
+        
+        if (event.data.type === 'closeReelModal') {
+            closeModal();
+        }
+    });
+}
+
+// Initialize reel modal when DOM is ready
+document.addEventListener('DOMContentLoaded', initReelModal);

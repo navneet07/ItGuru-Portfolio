@@ -357,18 +357,21 @@
             gap: 8px;
         }
 
-        /* Play/Pause Controls */
+        /* Play/Pause Controls - Bottom */
         .reel-controls {
             position: absolute;
-            top: 15px;
-            left: 15px;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 100;
             display: flex;
-            gap: 10px;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
         }
 
         .control-btn {
-            padding: 10px 20px;
+            padding: 10px 24px;
             background: rgba(139, 92, 246, 0.4);
             border: 1px solid rgba(139, 92, 246, 0.6);
             border-radius: 20px;
@@ -379,13 +382,26 @@
             transition: all 0.3s ease;
             font-size: 13px;
             font-family: 'Roboto Mono', monospace;
-            min-width: 90px;
+            min-width: 100px;
         }
 
         .control-btn:hover {
             background: rgba(139, 92, 246, 0.6);
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(139, 92, 246, 0.4);
+        }
+        
+        .control-hint {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+            font-family: 'Roboto Mono', monospace;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .control-hint.visible {
+            opacity: 1;
         }
 
         /* Selected card highlight */
@@ -403,17 +419,14 @@
 </head>
 <body>
     <div class="container">
-        <div class="reel-controls">
-            <button class="control-btn" id="playPauseBtn" onclick="togglePlayPause()">⏸️ Pause</button>
-        </div>
         <canvas id="particleCanvas"></canvas>
         <canvas id="scannerCanvas"></canvas>
         <div class="card-stream" id="cardStream">
             <div class="card-line" id="cardLine"></div>
         </div>
-        <div class="drag-hint">
-            <i class="fas fa-hand-pointer"></i>
-            <span>Click a card for details • Drag to explore</span>
+        <div class="reel-controls">
+            <button class="control-btn" id="playPauseBtn" onclick="togglePlayPause()">⏸️ Pause</button>
+            <span class="control-hint" id="controlHint">Click any card for details</span>
         </div>
     </div>
 
@@ -732,29 +745,42 @@
             toggleAnimation() {
                 this.isAnimating = !this.isAnimating;
                 const btn = document.getElementById("playPauseBtn");
+                const hint = document.getElementById("controlHint");
+                
                 if (btn) {
                     btn.textContent = this.isAnimating ? "⏸️ Pause" : "▶️ Play";
                 }
+                
+                // Show hint when paused
+                if (hint) {
+                    if (this.isAnimating) {
+                        hint.classList.remove("visible");
+                    } else {
+                        hint.classList.add("visible");
+                    }
+                }
+                
                 if (this.isAnimating && this.velocity === 0) {
                     this.velocity = 105;
+                    // Clear any held cards when playing
+                    document.querySelectorAll(".card-wrapper.card-held").forEach(w => {
+                        w.classList.remove("card-held");
+                    });
                 } else if (!this.isAnimating) {
                     this.velocity = 0;
                 }
             }
             
-            holdCard(wrapper) {
-                this.isHolding = true;
-                this.isAnimating = false;
-                this.velocity = 0;
-                this.frozenPosition = this.position;
+            holdCard(wrapper, career) {
                 this.activeWrapper = wrapper;
-                
                 wrapper.classList.add("card-held");
                 
-                // Update button
-                const btn = document.getElementById("playPauseBtn");
-                if (btn) {
-                    btn.textContent = "▶️ Play";
+                // Send message to parent to open modal
+                if (window.parent !== window) {
+                    window.parent.postMessage({
+                        type: 'openReelModal',
+                        career: career
+                    }, '*');
                 }
             }
             
@@ -1028,7 +1054,7 @@
                 wrapper.appendChild(normalCard);
                 wrapper.appendChild(asciiCard);
 
-                // Click to pause scroll and highlight card
+                // Click to show modal - ONLY works when paused
                 const self = this;
                 let clickStartX = 0;
                 let clickStartY = 0;
@@ -1039,6 +1065,9 @@
                 };
                 
                 const onMouseUp = (e) => {
+                    // Only allow clicks when paused (not animating)
+                    if (self.isAnimating) return;
+                    
                     const deltaX = Math.abs(e.clientX - clickStartX);
                     const deltaY = Math.abs(e.clientY - clickStartY);
                     
@@ -1047,8 +1076,8 @@
                         document.querySelectorAll(".card-wrapper.card-held").forEach(w => {
                             w.classList.remove("card-held");
                         });
-                        // Select this card and pause
-                        self.holdCard(wrapper);
+                        // Select this card and show modal
+                        self.holdCard(wrapper, career);
                     }
                 };
                 
@@ -1065,6 +1094,9 @@
                 }, { passive: true });
                 
                 wrapper.addEventListener("touchend", (e) => {
+                    // Only allow clicks when paused
+                    if (self.isAnimating) return;
+                    
                     const touch = e.changedTouches[0];
                     const deltaX = Math.abs(touch.clientX - touchStartX);
                     const deltaY = Math.abs(touch.clientY - touchStartY);
@@ -1073,7 +1105,7 @@
                         document.querySelectorAll(".card-wrapper.card-held").forEach(w => {
                             w.classList.remove("card-held");
                         });
-                        self.holdCard(wrapper);
+                        self.holdCard(wrapper, career);
                     }
                 });
 
