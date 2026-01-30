@@ -2,6 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
@@ -414,6 +415,151 @@
 
         .card-wrapper.card-held {
             z-index: 50;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .card-stream {
+                height: 200px;
+            }
+            
+            .card-wrapper {
+                width: 280px;
+                height: 175px;
+            }
+            
+            .card {
+                width: 280px;
+                height: 175px;
+                border-radius: 12px;
+            }
+            
+            .card-normal {
+                padding: 15px 18px;
+            }
+            
+            .card-line {
+                gap: 30px;
+            }
+            
+            .card-chip {
+                width: 35px;
+                height: 28px;
+            }
+            
+            .company-logo, .project-icon {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .project-icon {
+                font-size: 1.2rem;
+            }
+            
+            .card-name {
+                font-size: 10px;
+                letter-spacing: 1.5px;
+            }
+            
+            .card-role {
+                font-size: 9px;
+            }
+            
+            .card-date {
+                font-size: 10px;
+            }
+            
+            .card-network-logo {
+                width: 40px;
+                height: 25px;
+            }
+            
+            .circle {
+                width: 20px;
+                height: 20px;
+            }
+            
+            .nfc-icon {
+                width: 22px;
+                height: 22px;
+            }
+            
+            .nfc-icon svg {
+                width: 18px;
+                height: 18px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .card-stream {
+                height: 160px;
+            }
+            
+            .card-wrapper {
+                width: 240px;
+                height: 150px;
+            }
+            
+            .card {
+                width: 240px;
+                height: 150px;
+                border-radius: 10px;
+            }
+            
+            .card-normal {
+                padding: 12px 15px;
+            }
+            
+            .card-line {
+                gap: 20px;
+            }
+            
+            .card-chip {
+                width: 30px;
+                height: 22px;
+            }
+            
+            .company-logo, .project-icon {
+                width: 35px;
+                height: 35px;
+            }
+            
+            .project-icon {
+                font-size: 1rem;
+            }
+            
+            .card-name {
+                font-size: 9px;
+                letter-spacing: 1px;
+            }
+            
+            .card-role {
+                font-size: 8px;
+            }
+            
+            .card-date {
+                font-size: 9px;
+            }
+            
+            .card-network-logo {
+                width: 35px;
+                height: 22px;
+            }
+            
+            .circle {
+                width: 18px;
+                height: 18px;
+            }
+            
+            .nfc-icon {
+                width: 18px;
+                height: 18px;
+            }
+            
+            .nfc-icon svg {
+                width: 14px;
+                height: 14px;
+            }
         }
     </style>
 </head>
