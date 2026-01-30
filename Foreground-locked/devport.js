@@ -304,54 +304,11 @@ function animateElement(element, props, options = {}) {
 }
 
 window.addEventListener('load', () => {
+    // Initialize page animations directly (no loader)
     setTimeout(() => {
-        initLoaderAnimation();
+        initPageAnimations();
     }, 100);
-    
-    // Fallback: Force hide loader after 3 seconds
-    setTimeout(() => {
-        const loader = document.getElementById('loader');
-        if (loader && !loader.classList.contains('hidden')) {
-            loader.classList.add('hidden');
-            initPageAnimations();
-        }
-    }, 3000);
 });
-
-function initLoaderAnimation() {
-    const loader = document.getElementById('loader');
-    const loaderPercent = document.getElementById('loaderPercent');
-    if (!loader || !loaderPercent) return;
-    
-    let progress = 0;
-    const progressInterval = setInterval(() => {
-        progress += Math.random() * 15;
-        if (progress >= 100) {
-            progress = 100;
-            clearInterval(progressInterval);
-            setTimeout(() => {
-                if (typeof anime !== 'undefined') {
-                    anime({
-                        targets: loader,
-                        opacity: [1, 0],
-                        duration: 500,
-                        easing: 'easeInOutQuad',
-                        complete: () => {
-                            loader.classList.add('hidden');
-                            initPageAnimations();
-                        }
-                    });
-                } else {
-                    loader.classList.add('hidden');
-                    initPageAnimations();
-                }
-            }, 300);
-        }
-        if (loaderPercent) {
-            loaderPercent.textContent = Math.floor(progress) + '%';
-        }
-    }, 100);
-}
 
 function initPageAnimations() {
     setTimeout(() => {
