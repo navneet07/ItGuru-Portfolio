@@ -3373,32 +3373,11 @@ img {
 /* Visitor Counter */
 .visitor-counter {
     display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-top: 30px;
-    padding: 20px 25px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
-    backdrop-filter: blur(10px);
-}
-
-.counter-icon {
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-radius: 12px;
-    font-size: 20px;
-    color: #fff;
-}
-
-.counter-info {
-    display: flex;
     flex-direction: column;
-    gap: 4px;
+    align-items: center;
+    gap: 8px;
+    margin-top: 30px;
+    text-align: center;
 }
 
 .counter-label {
@@ -3409,7 +3388,7 @@ img {
 }
 
 .counter-value {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: 700;
     color: #fff;
     font-family: 'JetBrains Mono', monospace;
@@ -3418,39 +3397,20 @@ img {
 /* Visitor Counter Responsive */
 @media (max-width: 768px) {
     .visitor-counter {
-        padding: 15px 20px;
-        gap: 12px;
-    }
-    
-    .counter-icon {
-        width: 45px;
-        height: 45px;
-        font-size: 18px;
+        margin-top: 25px;
     }
     
     .counter-value {
-        font-size: 20px;
+        font-size: 24px;
     }
 }
 
 @media (max-width: 480px) {
-    .visitor-counter {
-        padding: 12px 15px;
-        gap: 10px;
-    }
-    
-    .counter-icon {
-        width: 40px;
-        height: 40px;
-        font-size: 16px;
-        border-radius: 10px;
-    }
-    
     .counter-label {
         font-size: 10px;
     }
     
     .counter-value {
-        font-size: 18px;
+        font-size: 22px;
     }
 }
