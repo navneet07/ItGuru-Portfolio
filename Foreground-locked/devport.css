@@ -3309,3 +3309,48 @@ img {
     font-size: 12px;
     color: rgba(255, 255, 255, 0.4);
 }
+
+/* Visitor Counter */
+.visitor-counter {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+    padding: 20px 25px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+}
+
+.counter-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    font-size: 20px;
+    color: #fff;
+}
+
+.counter-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.counter-label {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.counter-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+}

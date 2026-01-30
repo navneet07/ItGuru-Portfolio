@@ -1774,6 +1774,17 @@
                             <i class="fas fa-paper-plane"></i>
                         </button>
                     </form>
+                    
+                    <!-- Visitor Counter -->
+                    <div class="visitor-counter">
+                        <div class="counter-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="counter-info">
+                            <span class="counter-label">Portfolio Views</span>
+                            <span class="counter-value" id="visitorCount">—</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1816,6 +1827,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <!-- Main JS -->
     <script src="devport.js"></script>
+    
+    <!-- GoatCounter Analytics -->
+    <script data-goatcounter="https://tintin07.goatcounter.com/count"
+            async src="//gc.zgo.at/count.js"></script>
+    <script>
+        // Fetch and display visitor count
+        fetch('https://tintin07.goatcounter.com/counter/?p=/').then(response => response.text()).then(count => {
+            const counterEl = document.getElementById('visitorCount');
+            if (counterEl && count) {
+                counterEl.textContent = parseInt(count).toLocaleString();
+            }
+        }).catch(() => {
+            const counterEl = document.getElementById('visitorCount');
+            if (counterEl) counterEl.textContent = '—';
+        });
+    </script>
 </body>
 </html>
 
