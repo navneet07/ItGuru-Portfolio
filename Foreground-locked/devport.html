@@ -452,47 +452,108 @@
                 </div>
                 
                 <div class="periodic-table">
-                    <div class="periodic-element fullstack current" data-exp="senior" onclick="openExpDetail('senior')">
+                    <!-- Row 1 -->
+                    <div class="periodic-element leadership current" data-exp="walmart" onclick="openExpDetail('walmart')">
                         <div class="periodic-element-inner">
-                            <span class="exp-year">2022</span>
-                            <span class="title">TC</span>
-                            <span class="description">Tech Company</span>
-                            <span class="role">Senior Full Stack</span>
+                            <span class="exp-year">2021</span>
+                            <span class="title">Wm</span>
+                            <span class="description">Walmart</span>
+                            <span class="role">Lead Senior Analyst</span>
                         </div>
                         <span class="current-badge">Current</span>
                     </div>
                     
-                    <div class="periodic-element frontend" data-exp="frontend" onclick="openExpDetail('frontend')">
+                    <div class="periodic-element engineering" data-exp="microsoft" onclick="openExpDetail('microsoft')">
                         <div class="periodic-element-inner">
-                            <span class="exp-year">2020</span>
-                            <span class="title">DS</span>
-                            <span class="description">Digital Solutions</span>
-                            <span class="role">Frontend Dev</span>
+                            <span class="exp-year">2021</span>
+                            <span class="title">Ms</span>
+                            <span class="description">Microsoft</span>
+                            <span class="role">Program Manager</span>
                         </div>
                     </div>
                     
-                    <div class="periodic-element junior" data-exp="junior" onclick="openExpDetail('junior')">
+                    <div class="periodic-element engineering" data-exp="sonicwall" onclick="openExpDetail('sonicwall')">
+                        <div class="periodic-element-inner">
+                            <span class="exp-year">2021</span>
+                            <span class="title">Sw</span>
+                            <span class="description">SonicWall</span>
+                            <span class="role">Systems Engineer</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Row 2 -->
+                    <div class="periodic-element support" data-exp="asiasociety" onclick="openExpDetail('asiasociety')">
                         <div class="periodic-element-inner">
                             <span class="exp-year">2018</span>
-                            <span class="title">CS</span>
-                            <span class="description">Creative Studio</span>
-                            <span class="role">Junior Dev</span>
+                            <span class="title">As</span>
+                            <span class="description">Asia Society</span>
+                            <span class="role">Support Engineer</span>
+                        </div>
+                    </div>
+                    
+                    <div class="periodic-element engineering" data-exp="bloom" onclick="openExpDetail('bloom')">
+                        <div class="periodic-element-inner">
+                            <span class="exp-year">2017</span>
+                            <span class="title">Be</span>
+                            <span class="description">Bloom Energy</span>
+                            <span class="role">Desktop Engineer</span>
+                        </div>
+                    </div>
+                    
+                    <div class="periodic-element leadership" data-exp="compass" onclick="openExpDetail('compass')">
+                        <div class="periodic-element-inner">
+                            <span class="exp-year">2017</span>
+                            <span class="title">Cm</span>
+                            <span class="description">Compass Mfg</span>
+                            <span class="role">IT Project Manager</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Row 3 -->
+                    <div class="periodic-element admin" data-exp="satellite" onclick="openExpDetail('satellite')">
+                        <div class="periodic-element-inner">
+                            <span class="exp-year">2017</span>
+                            <span class="title">Sh</span>
+                            <span class="description">Satellite HC</span>
+                            <span class="role">AD Administrator</span>
+                        </div>
+                    </div>
+                    
+                    <div class="periodic-element support" data-exp="alarm" onclick="openExpDetail('alarm')">
+                        <div class="periodic-element-inner">
+                            <span class="exp-year">2016</span>
+                            <span class="title">Ac</span>
+                            <span class="description">Alarm.com</span>
+                            <span class="role">Product Support</span>
+                        </div>
+                    </div>
+                    
+                    <div class="periodic-element admin" data-exp="baseline" onclick="openExpDetail('baseline')">
+                        <div class="periodic-element-inner">
+                            <span class="exp-year">2014</span>
+                            <span class="title">Bf</span>
+                            <span class="description">Baseline Fin</span>
+                            <span class="role">Sys Admin</span>
                         </div>
                     </div>
                 </div>
                 
                 <div class="exp-legend">
                     <div class="legend-item">
-                        <span class="legend-marker fullstack"></span>
-                        <span class="legend-text">Full Stack</span>
+                        <span class="legend-marker leadership"></span>
+                        <span class="legend-text">Leadership</span>
                     </div>
                     <div class="legend-item">
-                        <span class="legend-marker frontend"></span>
-                        <span class="legend-text">Frontend</span>
+                        <span class="legend-marker engineering"></span>
+                        <span class="legend-text">Engineering</span>
                     </div>
                     <div class="legend-item">
-                        <span class="legend-marker junior"></span>
-                        <span class="legend-text">Junior</span>
+                        <span class="legend-marker support"></span>
+                        <span class="legend-text">Support</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-marker admin"></span>
+                        <span class="legend-text">Administration</span>
                     </div>
                 </div>
             </div>
@@ -504,125 +565,380 @@
                     <span>Back to Grid</span>
                 </button>
                 
-                <!-- Senior Full Stack Detail -->
-                <div class="exp-detail" id="detail-senior">
+                <!-- Walmart Detail -->
+                <div class="exp-detail" id="detail-walmart">
                     <div class="exp-detail-content">
                         <div class="exp-detail-header">
-                            <div class="exp-detail-symbol fullstack">TC</div>
+                            <div class="exp-detail-symbol leadership">Wm</div>
                             <div class="exp-detail-info">
-                                <h3 class="exp-detail-title">Senior Full Stack Developer</h3>
-                                <p class="exp-detail-company"><i class="fas fa-building"></i> Tech Company Inc.</p>
-                                <p class="exp-detail-period"><i class="fas fa-calendar"></i> 2022 - Present</p>
+                                <h3 class="exp-detail-title">Lead Senior Analyst / Systems Engineer</h3>
+                                <p class="exp-detail-company"><i class="fas fa-building"></i> Walmart Global Tech</p>
+                                <p class="exp-detail-location"><i class="fas fa-map-marker-alt"></i> Sunnyvale, CA</p>
+                                <p class="exp-detail-period"><i class="fas fa-calendar"></i> Dec 2021 - Present</p>
                             </div>
                         </div>
                         
                         <div class="exp-detail-body">
                             <p class="exp-detail-desc">
-                                Leading a team of developers in building complex web applications using React and Node.js. 
-                                Developing advanced user interfaces and optimizing performance. 
-                                Implementing microservices architecture and CI/CD pipelines.
+                                Lead day-to-day operation of mission-critical IT systems supporting large-scale enterprise environments.
+                                Serve as primary escalation lead during high-severity incidents.
                             </p>
                             
                             <div class="exp-achievements">
-                                <h4><i class="fas fa-trophy"></i> Key Achievements</h4>
+                                <h4><i class="fas fa-trophy"></i> Key Responsibilities</h4>
                                 <ul>
-                                    <li><i class="fas fa-check"></i> Led team of 5 developers</li>
-                                    <li><i class="fas fa-check"></i> Improved performance by 40%</li>
-                                    <li><i class="fas fa-check"></i> Deployed 20+ production apps</li>
+                                    <li><i class="fas fa-check"></i> Primary escalation lead for high-severity incidents</li>
+                                    <li><i class="fas fa-check"></i> System reliability through preventative maintenance & KTLO</li>
+                                    <li><i class="fas fa-check"></i> Administer Windows/Linux, Active Directory, Exchange, VMware</li>
+                                    <li><i class="fas fa-check"></i> Design phased patching strategies using SCCM/WSUS</li>
+                                    <li><i class="fas fa-check"></i> Mentor junior engineers and analysts</li>
                                 </ul>
                             </div>
                             
                             <div class="exp-tech-stack">
                                 <h4><i class="fas fa-code"></i> Tech Stack</h4>
                                 <div class="exp-tags">
-                                    <span class="exp-tag">React</span>
-                                    <span class="exp-tag">Node.js</span>
-                                    <span class="exp-tag">TypeScript</span>
-                                    <span class="exp-tag">MongoDB</span>
-                                    <span class="exp-tag">Docker</span>
-                                    <span class="exp-tag">AWS</span>
+                                    <span class="exp-tag">Windows</span>
+                                    <span class="exp-tag">Linux</span>
+                                    <span class="exp-tag">Active Directory</span>
+                                    <span class="exp-tag">Exchange</span>
+                                    <span class="exp-tag">VMware ESXi</span>
+                                    <span class="exp-tag">vSphere</span>
+                                    <span class="exp-tag">SCCM</span>
+                                    <span class="exp-tag">WSUS</span>
+                                    <span class="exp-tag">ITIL</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Frontend Developer Detail -->
-                <div class="exp-detail" id="detail-frontend">
+                <!-- Microsoft Detail -->
+                <div class="exp-detail" id="detail-microsoft">
                     <div class="exp-detail-content">
                         <div class="exp-detail-header">
-                            <div class="exp-detail-symbol frontend">DS</div>
+                            <div class="exp-detail-symbol engineering">Ms</div>
                             <div class="exp-detail-info">
-                                <h3 class="exp-detail-title">Frontend Developer</h3>
-                                <p class="exp-detail-company"><i class="fas fa-building"></i> Digital Solutions</p>
-                                <p class="exp-detail-period"><i class="fas fa-calendar"></i> 2020 - 2022</p>
+                                <h3 class="exp-detail-title">Technical Program Manager (Contract)</h3>
+                                <p class="exp-detail-company"><i class="fas fa-building"></i> Microsoft</p>
+                                <p class="exp-detail-location"><i class="fas fa-map-marker-alt"></i> Remote</p>
+                                <p class="exp-detail-period"><i class="fas fa-calendar"></i> Aug 2021 - Jan 2022</p>
                             </div>
                         </div>
                         
                         <div class="exp-detail-body">
                             <p class="exp-detail-desc">
-                                Developed interactive user interfaces using React and Vue.js. 
-                                Worked on improving user experience and performance optimization. 
-                                Collaborated with designers to implement pixel-perfect designs.
+                                Coordinated cross-functional engineering and IT initiatives in fast-paced environments.
+                                Liaison between technical teams and stakeholders to translate requirements into execution plans.
                             </p>
                             
                             <div class="exp-achievements">
-                                <h4><i class="fas fa-trophy"></i> Key Achievements</h4>
+                                <h4><i class="fas fa-trophy"></i> Key Responsibilities</h4>
                                 <ul>
-                                    <li><i class="fas fa-check"></i> Built 15+ responsive websites</li>
-                                    <li><i class="fas fa-check"></i> Reduced load time by 50%</li>
+                                    <li><i class="fas fa-check"></i> Cross-functional engineering coordination</li>
+                                    <li><i class="fas fa-check"></i> Stakeholder communication & requirements translation</li>
+                                    <li><i class="fas fa-check"></i> Risk, dependency & timeline tracking</li>
                                 </ul>
                             </div>
                             
                             <div class="exp-tech-stack">
-                                <h4><i class="fas fa-code"></i> Tech Stack</h4>
+                                <h4><i class="fas fa-code"></i> Skills</h4>
                                 <div class="exp-tags">
-                                    <span class="exp-tag">React</span>
-                                    <span class="exp-tag">Vue.js</span>
-                                    <span class="exp-tag">JavaScript</span>
-                                    <span class="exp-tag">SASS</span>
-                                    <span class="exp-tag">Webpack</span>
+                                    <span class="exp-tag">Program Management</span>
+                                    <span class="exp-tag">Cross-functional Coordination</span>
+                                    <span class="exp-tag">Stakeholder Management</span>
+                                    <span class="exp-tag">Agile</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Junior Developer Detail -->
-                <div class="exp-detail" id="detail-junior">
+                <!-- SonicWall Detail -->
+                <div class="exp-detail" id="detail-sonicwall">
                     <div class="exp-detail-content">
                         <div class="exp-detail-header">
-                            <div class="exp-detail-symbol junior">CS</div>
+                            <div class="exp-detail-symbol engineering">Sw</div>
                             <div class="exp-detail-info">
-                                <h3 class="exp-detail-title">Junior Developer</h3>
-                                <p class="exp-detail-company"><i class="fas fa-building"></i> Creative Studio</p>
-                                <p class="exp-detail-period"><i class="fas fa-calendar"></i> 2018 - 2020</p>
+                                <h3 class="exp-detail-title">Information Systems Engineer</h3>
+                                <p class="exp-detail-company"><i class="fas fa-building"></i> SonicWall</p>
+                                <p class="exp-detail-location"><i class="fas fa-map-marker-alt"></i> Milpitas, CA</p>
+                                <p class="exp-detail-period"><i class="fas fa-calendar"></i> Mar 2021 - Aug 2021</p>
                             </div>
                         </div>
                         
                         <div class="exp-detail-body">
                             <p class="exp-detail-desc">
-                                Developed websites using HTML, CSS, and JavaScript. 
-                                Learned best practices in web development. 
-                                Worked on various client projects and gained experience in modern web technologies.
+                                Supported enterprise network and security infrastructure including firewalls.
+                                Participated in incident response, troubleshooting, and system hardening.
                             </p>
                             
                             <div class="exp-achievements">
-                                <h4><i class="fas fa-trophy"></i> Key Achievements</h4>
+                                <h4><i class="fas fa-trophy"></i> Key Responsibilities</h4>
                                 <ul>
-                                    <li><i class="fas fa-check"></i> Completed 30+ projects</li>
-                                    <li><i class="fas fa-check"></i> Learned modern frameworks</li>
+                                    <li><i class="fas fa-check"></i> Enterprise network & security infrastructure support</li>
+                                    <li><i class="fas fa-check"></i> Incident response & troubleshooting</li>
+                                    <li><i class="fas fa-check"></i> System hardening & documentation</li>
                                 </ul>
                             </div>
                             
                             <div class="exp-tech-stack">
                                 <h4><i class="fas fa-code"></i> Tech Stack</h4>
                                 <div class="exp-tags">
-                                    <span class="exp-tag">HTML</span>
-                                    <span class="exp-tag">CSS</span>
-                                    <span class="exp-tag">JavaScript</span>
-                                    <span class="exp-tag">jQuery</span>
-                                    <span class="exp-tag">Bootstrap</span>
+                                    <span class="exp-tag">Firewalls</span>
+                                    <span class="exp-tag">Enterprise Networking</span>
+                                    <span class="exp-tag">Security Infrastructure</span>
+                                    <span class="exp-tag">System Integrations</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Asia Society Detail -->
+                <div class="exp-detail" id="detail-asiasociety">
+                    <div class="exp-detail-content">
+                        <div class="exp-detail-header">
+                            <div class="exp-detail-symbol support">As</div>
+                            <div class="exp-detail-info">
+                                <h3 class="exp-detail-title">Help Desk Support Engineer</h3>
+                                <p class="exp-detail-company"><i class="fas fa-building"></i> Asia Society</p>
+                                <p class="exp-detail-location"><i class="fas fa-map-marker-alt"></i> New York, NY</p>
+                                <p class="exp-detail-period"><i class="fas fa-calendar"></i> Oct 2018 - Mar 2021</p>
+                            </div>
+                        </div>
+                        
+                        <div class="exp-detail-body">
+                            <p class="exp-detail-desc">
+                                Delivered Tier 2/3 IT support across endpoints, networking, VOIP, and enterprise applications.
+                                Supported executive leadership with high-priority, time-sensitive technical issues.
+                            </p>
+                            
+                            <div class="exp-achievements">
+                                <h4><i class="fas fa-trophy"></i> Key Responsibilities</h4>
+                                <ul>
+                                    <li><i class="fas fa-check"></i> Tier 2/3 IT support for endpoints & networking</li>
+                                    <li><i class="fas fa-check"></i> Executive-level technical support</li>
+                                    <li><i class="fas fa-check"></i> On-call rotations for operations continuity</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="exp-tech-stack">
+                                <h4><i class="fas fa-code"></i> Tech Stack</h4>
+                                <div class="exp-tags">
+                                    <span class="exp-tag">Endpoint Management</span>
+                                    <span class="exp-tag">Networking</span>
+                                    <span class="exp-tag">VOIP</span>
+                                    <span class="exp-tag">Enterprise Applications</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Bloom Energy Detail -->
+                <div class="exp-detail" id="detail-bloom">
+                    <div class="exp-detail-content">
+                        <div class="exp-detail-header">
+                            <div class="exp-detail-symbol engineering">Be</div>
+                            <div class="exp-detail-info">
+                                <h3 class="exp-detail-title">Desktop Support Engineer</h3>
+                                <p class="exp-detail-company"><i class="fas fa-building"></i> Bloom Energy</p>
+                                <p class="exp-detail-location"><i class="fas fa-map-marker-alt"></i> Sunnyvale, CA</p>
+                                <p class="exp-detail-period"><i class="fas fa-calendar"></i> Oct 2017 - Oct 2018</p>
+                            </div>
+                        </div>
+                        
+                        <div class="exp-detail-body">
+                            <p class="exp-detail-desc">
+                                Supported IT infrastructure in mission-critical energy technology environment.
+                                Coordinated deployment and lifecycle management of Dell, Apple, and HP systems.
+                            </p>
+                            
+                            <div class="exp-achievements">
+                                <h4><i class="fas fa-trophy"></i> Key Responsibilities</h4>
+                                <ul>
+                                    <li><i class="fas fa-check"></i> IT infrastructure support in energy tech</li>
+                                    <li><i class="fas fa-check"></i> Device lifecycle management (Dell, Apple, HP)</li>
+                                    <li><i class="fas fa-check"></i> Hardware/software issue resolution</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="exp-tech-stack">
+                                <h4><i class="fas fa-code"></i> Tech Stack</h4>
+                                <div class="exp-tags">
+                                    <span class="exp-tag">Dell</span>
+                                    <span class="exp-tag">Apple</span>
+                                    <span class="exp-tag">HP</span>
+                                    <span class="exp-tag">Hardware Support</span>
+                                    <span class="exp-tag">Endpoint Management</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Compass Manufacturing Detail -->
+                <div class="exp-detail" id="detail-compass">
+                    <div class="exp-detail-content">
+                        <div class="exp-detail-header">
+                            <div class="exp-detail-symbol leadership">Cm</div>
+                            <div class="exp-detail-info">
+                                <h3 class="exp-detail-title">IT Project Manager</h3>
+                                <p class="exp-detail-company"><i class="fas fa-building"></i> Compass Manufacturing Services</p>
+                                <p class="exp-detail-location"><i class="fas fa-map-marker-alt"></i> Fremont, CA</p>
+                                <p class="exp-detail-period"><i class="fas fa-calendar"></i> Aug 2017 - Oct 2017</p>
+                            </div>
+                        </div>
+                        
+                        <div class="exp-detail-body">
+                            <p class="exp-detail-desc">
+                                Led 10 helpdesk technicians and 430+ installation technicians across large-scale deployments.
+                                Managed scheduling and execution of 900+ installations under tight timelines.
+                            </p>
+                            
+                            <div class="exp-achievements">
+                                <h4><i class="fas fa-trophy"></i> Key Achievements</h4>
+                                <ul>
+                                    <li><i class="fas fa-check"></i> Led team of 10 helpdesk technicians</li>
+                                    <li><i class="fas fa-check"></i> Managed 430+ installation technicians</li>
+                                    <li><i class="fas fa-check"></i> Executed 900+ installations on schedule</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="exp-tech-stack">
+                                <h4><i class="fas fa-code"></i> Tech Stack</h4>
+                                <div class="exp-tags">
+                                    <span class="exp-tag">POS Systems</span>
+                                    <span class="exp-tag">Servers</span>
+                                    <span class="exp-tag">Routers</span>
+                                    <span class="exp-tag">Network Infrastructure</span>
+                                    <span class="exp-tag">Project Management</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Satellite Healthcare Detail -->
+                <div class="exp-detail" id="detail-satellite">
+                    <div class="exp-detail-content">
+                        <div class="exp-detail-header">
+                            <div class="exp-detail-symbol admin">Sh</div>
+                            <div class="exp-detail-info">
+                                <h3 class="exp-detail-title">Active Directory Administrator</h3>
+                                <p class="exp-detail-company"><i class="fas fa-building"></i> Satellite Healthcare / WellBound</p>
+                                <p class="exp-detail-location"><i class="fas fa-map-marker-alt"></i> Redwood City, CA</p>
+                                <p class="exp-detail-period"><i class="fas fa-calendar"></i> May 2017 - Dec 2017</p>
+                            </div>
+                        </div>
+                        
+                        <div class="exp-detail-body">
+                            <p class="exp-detail-desc">
+                                Administered Active Directory and Exchange in regulated healthcare environment.
+                                Managed identity, access controls, and user migrations across sites.
+                            </p>
+                            
+                            <div class="exp-achievements">
+                                <h4><i class="fas fa-trophy"></i> Key Responsibilities</h4>
+                                <ul>
+                                    <li><i class="fas fa-check"></i> Active Directory & Exchange administration</li>
+                                    <li><i class="fas fa-check"></i> Identity & access control management</li>
+                                    <li><i class="fas fa-check"></i> User migrations across healthcare sites</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="exp-tech-stack">
+                                <h4><i class="fas fa-code"></i> Tech Stack</h4>
+                                <div class="exp-tags">
+                                    <span class="exp-tag">Active Directory</span>
+                                    <span class="exp-tag">Exchange</span>
+                                    <span class="exp-tag">Identity Management</span>
+                                    <span class="exp-tag">ITSM</span>
+                                    <span class="exp-tag">ITIL</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Alarm.com Detail -->
+                <div class="exp-detail" id="detail-alarm">
+                    <div class="exp-detail-content">
+                        <div class="exp-detail-header">
+                            <div class="exp-detail-symbol support">Ac</div>
+                            <div class="exp-detail-info">
+                                <h3 class="exp-detail-title">Technical Product Support Specialist</h3>
+                                <p class="exp-detail-company"><i class="fas fa-building"></i> Alarm.com</p>
+                                <p class="exp-detail-location"><i class="fas fa-map-marker-alt"></i> Remote</p>
+                                <p class="exp-detail-period"><i class="fas fa-calendar"></i> Sep 2016 - Aug 2017</p>
+                            </div>
+                        </div>
+                        
+                        <div class="exp-detail-body">
+                            <p class="exp-detail-desc">
+                                Provided Tier 2/3 support in 24x7 mission-critical security platform environment.
+                                Analyzed logs, diagnosed issues, and escalated defects to engineering teams.
+                            </p>
+                            
+                            <div class="exp-achievements">
+                                <h4><i class="fas fa-trophy"></i> Key Responsibilities</h4>
+                                <ul>
+                                    <li><i class="fas fa-check"></i> 24x7 Tier 2/3 support for security platform</li>
+                                    <li><i class="fas fa-check"></i> Log analysis & issue diagnosis</li>
+                                    <li><i class="fas fa-check"></i> SQL scripts for operational insights</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="exp-tech-stack">
+                                <h4><i class="fas fa-code"></i> Tech Stack</h4>
+                                <div class="exp-tags">
+                                    <span class="exp-tag">SQL</span>
+                                    <span class="exp-tag">Log Analysis</span>
+                                    <span class="exp-tag">24x7 Operations</span>
+                                    <span class="exp-tag">Security Platforms</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Baseline Financial Detail -->
+                <div class="exp-detail" id="detail-baseline">
+                    <div class="exp-detail-content">
+                        <div class="exp-detail-header">
+                            <div class="exp-detail-symbol admin">Bf</div>
+                            <div class="exp-detail-info">
+                                <h3 class="exp-detail-title">Junior System Administrator</h3>
+                                <p class="exp-detail-company"><i class="fas fa-building"></i> Baseline Financial Services</p>
+                                <p class="exp-detail-location"><i class="fas fa-map-marker-alt"></i> San Jose, CA</p>
+                                <p class="exp-detail-period"><i class="fas fa-calendar"></i> Aug 2014 - Aug 2015</p>
+                            </div>
+                        </div>
+                        
+                        <div class="exp-detail-body">
+                            <p class="exp-detail-desc">
+                                Managed VMware ESXi hosts, virtual machines, storage, and networking.
+                                Supported desktop, server, and network infrastructure installations.
+                            </p>
+                            
+                            <div class="exp-achievements">
+                                <h4><i class="fas fa-trophy"></i> Key Responsibilities</h4>
+                                <ul>
+                                    <li><i class="fas fa-check"></i> VMware ESXi host management</li>
+                                    <li><i class="fas fa-check"></i> Virtual machine & storage administration</li>
+                                    <li><i class="fas fa-check"></i> Network infrastructure support</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="exp-tech-stack">
+                                <h4><i class="fas fa-code"></i> Tech Stack</h4>
+                                <div class="exp-tags">
+                                    <span class="exp-tag">VMware ESXi</span>
+                                    <span class="exp-tag">Virtualization</span>
+                                    <span class="exp-tag">Storage</span>
+                                    <span class="exp-tag">Networking</span>
+                                    <span class="exp-tag">Server Administration</span>
                                 </div>
                             </div>
                         </div>

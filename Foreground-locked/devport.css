@@ -2240,22 +2240,28 @@ img {
 }
 
 /* Element Colors */
-.periodic-element.fullstack {
-    background: linear-gradient(135deg, #c084fc 0%, #a78bfa 100%);
-    --el-color-1: #c084fc;
-    --el-color-2: #a78bfa;
+.periodic-element.leadership {
+    background: linear-gradient(135deg, #58ac30 0%, #a7df62 100%);
+    --el-color-1: #58ac30;
+    --el-color-2: #a7df62;
 }
 
-.periodic-element.frontend {
-    background: linear-gradient(135deg, #67e8f9 0%, #22d3ee 100%);
-    --el-color-1: #67e8f9;
-    --el-color-2: #22d3ee;
+.periodic-element.engineering {
+    background: linear-gradient(135deg, #37cfdc 0%, #5a88e5 100%);
+    --el-color-1: #37cfdc;
+    --el-color-2: #5a88e5;
 }
 
-.periodic-element.junior {
-    background: linear-gradient(135deg, #86efac 0%, #4ade80 100%);
-    --el-color-1: #86efac;
-    --el-color-2: #4ade80;
+.periodic-element.support {
+    background: linear-gradient(135deg, #ff616d 0%, #ffc171 100%);
+    --el-color-1: #ff616d;
+    --el-color-2: #ffc171;
+}
+
+.periodic-element.admin {
+    background: linear-gradient(135deg, #f3f9a6 0%, #cbc634 100%);
+    --el-color-1: #f3f9a6;
+    --el-color-2: #cbc634;
 }
 
 /* Legend */
@@ -2278,16 +2284,20 @@ img {
     border-radius: 4px;
 }
 
-.legend-marker.fullstack {
-    background: linear-gradient(135deg, #c084fc, #a78bfa);
+.legend-marker.leadership {
+    background: linear-gradient(135deg, #58ac30, #a7df62);
 }
 
-.legend-marker.frontend {
-    background: linear-gradient(135deg, #67e8f9, #22d3ee);
+.legend-marker.engineering {
+    background: linear-gradient(135deg, #37cfdc, #5a88e5);
 }
 
-.legend-marker.junior {
-    background: linear-gradient(135deg, #86efac, #4ade80);
+.legend-marker.support {
+    background: linear-gradient(135deg, #ff616d, #ffc171);
+}
+
+.legend-marker.admin {
+    background: linear-gradient(135deg, #f3f9a6, #cbc634);
 }
 
 .legend-text {
@@ -2401,16 +2411,20 @@ img {
     flex-shrink: 0;
 }
 
-.exp-detail-symbol.fullstack {
-    background: linear-gradient(135deg, #c084fc, #a78bfa);
+.exp-detail-symbol.leadership {
+    background: linear-gradient(135deg, #58ac30, #a7df62);
 }
 
-.exp-detail-symbol.frontend {
-    background: linear-gradient(135deg, #67e8f9, #22d3ee);
+.exp-detail-symbol.engineering {
+    background: linear-gradient(135deg, #37cfdc, #5a88e5);
 }
 
-.exp-detail-symbol.junior {
-    background: linear-gradient(135deg, #86efac, #4ade80);
+.exp-detail-symbol.support {
+    background: linear-gradient(135deg, #ff616d, #ffc171);
+}
+
+.exp-detail-symbol.admin {
+    background: linear-gradient(135deg, #f3f9a6, #cbc634);
 }
 
 .exp-detail-info {
@@ -2425,6 +2439,7 @@ img {
 }
 
 .exp-detail-company,
+.exp-detail-location,
 .exp-detail-period {
     color: var(--text-muted);
     font-size: 0.95rem;
@@ -2435,6 +2450,7 @@ img {
 }
 
 .exp-detail-company i,
+.exp-detail-location i,
 .exp-detail-period i {
     color: var(--primary);
     width: 16px;
@@ -2528,6 +2544,7 @@ img {
     }
     
     .exp-detail-company,
+    .exp-detail-location,
     .exp-detail-period {
         justify-content: center;
     }
