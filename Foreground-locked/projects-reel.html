@@ -882,7 +882,7 @@
                 this.container = document.getElementById("cardStream");
                 this.cardLine = document.getElementById("cardLine");
                 this.position = 0;
-                this.velocity = 105;
+                this.velocity = 158;
                 this.direction = -1;
                 this.isAnimating = true;
                 this.isDragging = false;
@@ -893,7 +893,7 @@
                 this.lastMouseX = 0;
                 this.mouseVelocity = 0;
                 this.friction = 0.95;
-                this.minVelocity = 52;
+                this.minVelocity = 78;
                 this.containerWidth = 0;
                 this.cardLineWidth = 0;
                 this.init();
@@ -918,7 +918,7 @@
                 }
                 
                 if (this.isAnimating && this.velocity === 0) {
-                    this.velocity = 105;
+                    this.velocity = 158;
                     // Clear any held cards when playing
                     document.querySelectorAll(".card-wrapper.card-held").forEach(w => {
                         w.classList.remove("card-held");
@@ -1012,7 +1012,7 @@
                     this.velocity = Math.abs(this.mouseVelocity);
                     this.direction = this.mouseVelocity > 0 ? 1 : -1;
                 } else {
-                    this.velocity = 105;
+                    this.velocity = 158;
                 }
                 this.isAnimating = true;
             }
@@ -1407,10 +1407,23 @@
                 this.canvas = document.getElementById("scannerCanvas");
                 this.ctx = this.canvas.getContext("2d");
                 this.particles = [];
-                this.maxParticles = 600;
+                this.glowingChars = [];
+                this.maxParticles = 400;
+                this.maxGlowingChars = 80;
                 this.intensity = 0.8;
                 this.lightBarWidth = 3;
                 this.fadeZone = 50;
+                // Characters for the matrix effect
+                this.chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&*+=?@!";
+                // Glow colors
+                this.glowColors = [
+                    { color: "#00f5ff", shadow: "rgba(0, 245, 255, 0.8)" },   // Cyan
+                    { color: "#a855f7", shadow: "rgba(168, 85, 247, 0.8)" },  // Purple
+                    { color: "#f97316", shadow: "rgba(249, 115, 22, 0.8)" },  // Orange
+                    { color: "#22c55e", shadow: "rgba(34, 197, 94, 0.8)" },   // Green
+                    { color: "#fbbf24", shadow: "rgba(251, 191, 36, 0.8)" },  // Yellow
+                    { color: "#ec4899", shadow: "rgba(236, 72, 153, 0.8)" }   // Pink
+                ];
                 this.init();
             }
 
@@ -1418,6 +1431,7 @@
                 this.resize();
                 this.createGradientCache();
                 this.initParticles();
+                this.initGlowingChars();
                 this.animate();
                 window.addEventListener("resize", () => this.resize());
             }
@@ -1463,9 +1477,34 @@
                 };
             }
 
+            createGlowingChar() {
+                const colorIndex = Math.floor(Math.random() * this.glowColors.length);
+                const direction = Math.random() > 0.5 ? 1 : -1; // Left or right from center
+                return {
+                    char: this.chars[Math.floor(Math.random() * this.chars.length)],
+                    x: this.lightBarX + (Math.random() - 0.5) * 10,
+                    y: Math.random() * this.h,
+                    vx: (Math.random() * 1.5 + 0.5) * direction,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    size: Math.random() * 8 + 10,
+                    alpha: Math.random() * 0.5 + 0.5,
+                    life: 1.0,
+                    decay: Math.random() * 0.015 + 0.003,
+                    colorIndex: colorIndex,
+                    glowIntensity: Math.random() * 0.5 + 0.5,
+                    pulseSpeed: Math.random() * 0.05 + 0.02
+                };
+            }
+
             initParticles() {
                 for (let i = 0; i < this.maxParticles; i++) {
                     this.particles.push(this.createParticle());
+                }
+            }
+
+            initGlowingChars() {
+                for (let i = 0; i < this.maxGlowingChars; i++) {
+                    this.glowingChars.push(this.createGlowingChar());
                 }
             }
 
@@ -1515,6 +1554,56 @@
                 // Draw light bar first
                 this.drawLightBar();
 
+                // Update and draw glowing characters
+                this.ctx.font = "bold 14px 'JetBrains Mono', 'Roboto Mono', monospace";
+                
+                for (let i = 0; i < this.glowingChars.length; i++) {
+                    const c = this.glowingChars[i];
+                    
+                    // Update position
+                    c.x += c.vx;
+                    c.y += c.vy;
+                    c.life -= c.decay;
+                    
+                    // Pulsing glow effect
+                    const pulse = Math.sin(Date.now() * c.pulseSpeed + i) * 0.3 + 0.7;
+                    
+                    // Fade based on vertical position
+                    let fadeAlpha = 1;
+                    if (c.y < this.fadeZone) {
+                        fadeAlpha = c.y / this.fadeZone;
+                    } else if (c.y > this.h - this.fadeZone) {
+                        fadeAlpha = (this.h - c.y) / this.fadeZone;
+                    }
+
+                    // Draw glowing character
+                    if (c.life > 0) {
+                        const gc = this.glowColors[c.colorIndex];
+                        const finalAlpha = c.alpha * c.life * fadeAlpha * pulse;
+                        
+                        // Glow effect
+                        this.ctx.shadowColor = gc.shadow;
+                        this.ctx.shadowBlur = 15 * c.glowIntensity;
+                        this.ctx.fillStyle = gc.color;
+                        this.ctx.globalAlpha = finalAlpha;
+                        this.ctx.font = `bold ${c.size}px 'JetBrains Mono', 'Roboto Mono', monospace`;
+                        this.ctx.fillText(c.char, c.x, c.y);
+                        
+                        // Extra glow pass
+                        this.ctx.shadowBlur = 25 * c.glowIntensity;
+                        this.ctx.globalAlpha = finalAlpha * 0.5;
+                        this.ctx.fillText(c.char, c.x, c.y);
+                    }
+
+                    // Reset character if dead or off screen
+                    if (c.life <= 0 || c.x > this.w + 20 || c.x < -20) {
+                        this.glowingChars[i] = this.createGlowingChar();
+                    }
+                }
+                
+                // Reset shadow for particles
+                this.ctx.shadowBlur = 0;
+
                 // Update and draw particles
                 this.ctx.globalCompositeOperation = "lighter";
                 
@@ -1555,9 +1644,12 @@
                     }
                 }
 
-                // Spawn new particles
+                // Spawn new particles and chars
                 if (Math.random() < this.intensity && this.particles.length < this.maxParticles) {
                     this.particles.push(this.createParticle());
+                }
+                if (Math.random() < 0.3 && this.glowingChars.length < this.maxGlowingChars) {
+                    this.glowingChars.push(this.createGlowingChar());
                 }
 
                 this.ctx.globalCompositeOperation = "source-over";
@@ -1576,7 +1668,7 @@
         window.addEventListener('message', (event) => {
             if (event.data.type === 'modalClosed' && cardStreamInstance) {
                 cardStreamInstance.isAnimating = true;
-                cardStreamInstance.velocity = 105;
+                cardStreamInstance.velocity = 158;
                 document.querySelectorAll(".card-wrapper.card-held").forEach(w => {
                     w.classList.remove("card-held");
                 });
