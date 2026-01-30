@@ -2343,6 +2343,39 @@ img {
     height: 25px;
 }
 
+/* Legend inside periodic table center gap */
+.periodic-legend-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.periodic-legend-center .legend-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.6rem 2rem;
+}
+
+.periodic-legend-center .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.periodic-legend-center .legend-marker {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.periodic-legend-center .legend-text {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
 /* Element Colors - 8 Categories */
 
 /* Enterprise Systems - Blue */
