@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body {
             width: 100%;
             height: 100%;
-            overflow: hidden;
+            overflow: visible;
             background: transparent;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
@@ -21,15 +22,17 @@
             align-items: center;
             justify-content: center;
             background: transparent;
+            overflow: visible;
         }
 
         .card-stream {
             position: absolute;
             width: 100vw;
-            height: 220px;
+            height: 260px;
             display: flex;
             align-items: center;
             overflow: visible;
+            z-index: 10;
         }
 
         .card-line {
@@ -40,6 +43,7 @@
             cursor: grab;
             user-select: none;
             will-change: transform;
+            overflow: visible;
         }
 
         .card-line:active { cursor: grabbing; }
@@ -47,68 +51,231 @@
 
         .card-wrapper {
             position: relative;
-            width: 320px;
-            height: 200px;
+            width: 380px;
+            height: 240px;
             flex-shrink: 0;
+            overflow: visible;
         }
 
         .card {
             position: absolute;
             top: 0;
             left: 0;
-            width: 320px;
-            height: 200px;
-            border-radius: 12px;
+            width: 380px;
+            height: 240px;
+            border-radius: 15px;
             overflow: hidden;
         }
 
+        /* Credit Card Styles */
         .card-normal {
-            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            display: flex;
-            flex-direction: column;
-            z-index: 2;
-            clip-path: inset(0 0 0 var(--clip-right, 0%));
-            border: 1px solid rgba(148, 163, 184, 0.2);
-        }
-
-        .card-image {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 12px 12px 0 0;
-        }
-
-        .card-content {
-            padding: 12px 16px;
-            flex: 1;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 
+                        0 0 1px rgba(255, 255, 255, 0.1) inset;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            padding: 20px 25px;
+            color: white;
+            z-index: 2;
+            clip-path: inset(0 0 0 var(--clip-right, 0%));
         }
 
-        .card-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #f1f5f9;
-            margin-bottom: 4px;
+        /* Card variants */
+        .card-normal.card-dark {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #0a0a0a 100%);
         }
 
-        .card-tech {
+        .card-normal.card-metallic {
+            background: linear-gradient(135deg, #2c3e50 0%, #4a5568 30%, #2d3748 70%, #1a202c 100%);
+        }
+
+        .card-normal.card-gold {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f0f23 100%);
+        }
+
+        .card-normal.card-gold::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: linear-gradient(to top, rgba(218, 165, 32, 0.4) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .card-normal.card-gradient {
+            position: relative;
+        }
+
+        .card-normal.card-gradient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.3;
+            z-index: 0;
+            border-radius: 15px;
+        }
+
+        /* Card header with logo */
+        .card-header {
             display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            z-index: 1;
         }
 
-        .tech-tag {
-            font-size: 10px;
-            padding: 2px 8px;
-            background: rgba(192, 132, 252, 0.2);
-            color: #c084fc;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
+        .card-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
+        .card-brand-logo {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: transparent;
+        }
+
+        .card-brand-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 24px;
+            color: white;
+            background: transparent;
+        }
+
+        .card-brand-name {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Contactless icon */
+        .contactless-icon {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(90deg);
+        }
+
+        .contactless-icon svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.7);
+            stroke-width: 2;
+        }
+
+        /* Chip and contactless area */
+        .card-chip-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-chip {
+            width: 40px;
+            height: 30px;
+            background: linear-gradient(135deg, #d4af37 0%, #f4e5b0 30%, #d4af37 60%, #aa8c2c 100%);
+            border-radius: 5px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-chip::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70%;
+            height: 60%;
+            background: linear-gradient(135deg, transparent 20%, rgba(255, 255, 255, 0.3) 50%, transparent 80%);
+            border-radius: 3px;
+        }
+
+        /* Date range / Card number */
+        .card-number {
+            font-family: 'Roboto Mono', 'Courier New', monospace;
+            font-size: 15px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            color: rgba(255, 255, 255, 0.9);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Card footer */
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-holder-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .card-holder-name {
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            color: white;
+        }
+
+        .card-network-logo {
+            width: 50px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        /* Mastercard style circles */
+        .mastercard-logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .mastercard-logo .circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+        }
+
+        .mastercard-logo .circle-1 {
+            background: rgba(255, 95, 95, 0.8);
+        }
+
+        .mastercard-logo .circle-2 {
+            background: rgba(255, 180, 0, 0.8);
+            margin-left: -10px;
+        }
+
+        /* ASCII card */
         .card-ascii {
             background: transparent;
             z-index: 1;
@@ -144,7 +311,7 @@
             left: 0;
             transform: translateY(-50%);
             width: 100vw;
-            height: 220px;
+            height: 260px;
             z-index: 0;
             pointer-events: none;
         }
@@ -155,7 +322,7 @@
             left: 0;
             transform: translateY(-50%);
             width: 100vw;
-            height: 280px;
+            height: 320px;
             z-index: 15;
             pointer-events: none;
         }
@@ -189,10 +356,56 @@
             align-items: center;
             gap: 8px;
         }
+
+        /* Play/Pause Controls */
+        .reel-controls {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 100;
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            padding: 10px 20px;
+            background: rgba(139, 92, 246, 0.4);
+            border: 1px solid rgba(139, 92, 246, 0.6);
+            border-radius: 20px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            font-size: 13px;
+            font-family: 'Roboto Mono', monospace;
+            min-width: 90px;
+        }
+
+        .control-btn:hover {
+            background: rgba(139, 92, 246, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        /* Selected card highlight */
+        .card-wrapper.card-held .card {
+            transform: scale(1.05);
+            box-shadow: 
+                0 0 40px rgba(139, 92, 246, 0.5),
+                0 15px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-wrapper.card-held {
+            z-index: 50;
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="reel-controls">
+            <button class="control-btn" id="playPauseBtn" onclick="togglePlayPause()">⏸️ Pause</button>
+        </div>
         <canvas id="particleCanvas"></canvas>
         <canvas id="scannerCanvas"></canvas>
         <div class="card-stream" id="cardStream">
@@ -200,7 +413,7 @@
         </div>
         <div class="drag-hint">
             <i class="fas fa-hand-pointer"></i>
-            <span>Drag to explore career & projects</span>
+            <span>Click a card for details • Drag to explore</span>
         </div>
     </div>
 
@@ -212,140 +425,346 @@
             {
                 title: "Alarm.com",
                 role: "Technical Product Support",
-                period: "2016-2017",
+                dateRange: "6/1/2016 - 5/31/2017",
                 logo: "logos/alarm.jpeg",
-                type: "career"
+                type: "career",
+                cardStyle: "card-dark",
+                skills: [
+                    { name: "Support", value: 85, color: "#f97316" },
+                    { name: "Technical", value: 70, color: "#3b82f6" },
+                    { name: "Product", value: 65, color: "#22c55e" },
+                    { name: "Comm", value: 80, color: "#06b6d4" }
+                ],
+                summaries: [
+                    { icon: "fa-headset", title: "Customer Support", sub: "Technical troubleshooting", color: "orange" },
+                    { icon: "fa-tools", title: "Product Config", sub: "Security systems", color: "blue" }
+                ]
             },
             {
                 title: "Bloom Energy",
                 role: "Desktop Support Engineer",
-                period: "2017-2018",
+                dateRange: "6/1/2017 - 5/31/2018",
                 logo: "logos/bloom.png",
-                type: "career"
+                type: "career",
+                cardStyle: "card-metallic",
+                skills: [
+                    { name: "Desktop", value: 90, color: "#f97316" },
+                    { name: "Network", value: 75, color: "#3b82f6" },
+                    { name: "Hardware", value: 80, color: "#22c55e" },
+                    { name: "Support", value: 85, color: "#06b6d4" }
+                ],
+                summaries: [
+                    { icon: "fa-desktop", title: "Desktop Support", sub: "End-user systems", color: "orange" },
+                    { icon: "fa-network-wired", title: "Network Admin", sub: "Infrastructure", color: "blue" }
+                ]
             },
             {
                 title: "Asia Society",
                 role: "Lead Help Desk Support",
-                period: "2018-2021",
+                dateRange: "6/1/2018 - 5/31/2021",
                 logo: "logos/asiasociety.jpg",
-                type: "career"
+                type: "career",
+                cardStyle: "",
+                skills: [
+                    { name: "Leadership", value: 80, color: "#f97316" },
+                    { name: "Help Desk", value: 95, color: "#3b82f6" },
+                    { name: "Training", value: 75, color: "#22c55e" },
+                    { name: "Systems", value: 85, color: "#06b6d4" }
+                ],
+                summaries: [
+                    { icon: "fa-users", title: "Team Lead", sub: "Help desk operations", color: "orange" },
+                    { icon: "fa-chalkboard-teacher", title: "Training", sub: "User education", color: "green" }
+                ]
             },
             {
                 title: "SonicWall",
                 role: "Systems Engineer",
-                period: "2021",
+                dateRange: "1/1/2021 - 6/30/2021",
                 logo: "logos/sonicwall.jpg",
-                type: "career"
+                type: "career",
+                cardStyle: "card-dark",
+                skills: [
+                    { name: "Security", value: 85, color: "#f97316" },
+                    { name: "Firewall", value: 90, color: "#3b82f6" },
+                    { name: "Network", value: 80, color: "#22c55e" },
+                    { name: "Systems", value: 85, color: "#06b6d4" }
+                ],
+                summaries: [
+                    { icon: "fa-shield-alt", title: "Security Eng", sub: "Firewall config", color: "orange" },
+                    { icon: "fa-server", title: "Systems", sub: "Infrastructure", color: "blue" }
+                ]
             },
             {
                 title: "Microsoft",
                 role: "Technical Program Manager",
-                period: "2021-2022",
+                dateRange: "6/1/2021 - 5/31/2022",
                 logo: "logos/microsoft.webp",
-                type: "career"
+                type: "career",
+                cardStyle: "card-metallic",
+                skills: [
+                    { name: "Program", value: 85, color: "#f97316" },
+                    { name: "Technical", value: 80, color: "#3b82f6" },
+                    { name: "Strategy", value: 75, color: "#22c55e" },
+                    { name: "Agile", value: 90, color: "#06b6d4" }
+                ],
+                summaries: [
+                    { icon: "fa-project-diagram", title: "Program Mgmt", sub: "Cross-team delivery", color: "purple" },
+                    { icon: "fa-chart-line", title: "Strategy", sub: "Roadmap planning", color: "blue" }
+                ]
             },
             {
                 title: "Walmart",
                 role: "Lead Senior Analyst",
-                period: "2021-Present",
+                dateRange: "9/1/2021 - Present",
                 logo: "logos/walmart.jpg",
                 type: "career",
-                current: true
+                current: true,
+                cardStyle: "card-gold",
+                skills: [
+                    { name: "Analysis", value: 95, color: "#f97316" },
+                    { name: "Leadership", value: 90, color: "#3b82f6" },
+                    { name: "Systems", value: 85, color: "#22c55e" },
+                    { name: "Strategy", value: 88, color: "#06b6d4" }
+                ],
+                summaries: [
+                    { icon: "fa-chart-bar", title: "Lead Analyst", sub: "Enterprise systems", color: "orange" },
+                    { icon: "fa-users-cog", title: "Team Lead", sub: "Mentoring engineers", color: "blue" }
+                ]
             },
             // === PERSONAL PROJECTS ===
             {
                 title: "Bot Management",
                 role: "Founder / Lead Engineer",
-                period: "2023-Present",
+                dateRange: "1/1/2023 - Present",
                 icon: "fa-robot",
                 type: "project",
-                gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+                gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+                cardStyle: "card-gradient",
+                skills: [
+                    { name: "Python", value: 90, color: "#667eea" },
+                    { name: "AI/ML", value: 85, color: "#a855f7" },
+                    { name: "Automation", value: 95, color: "#22c55e" },
+                    { name: "APIs", value: 88, color: "#06b6d4" }
+                ],
+                summaries: [
+                    { icon: "fa-robot", title: "Bot Orchestration", sub: "Multi-bot systems", color: "purple" },
+                    { icon: "fa-cogs", title: "Automation", sub: "Task automation", color: "blue" }
+                ]
             },
             {
                 title: "Twitter/X Automation",
                 role: "Automation Engineer",
-                period: "2023-Present",
+                dateRange: "1/1/2023 - Present",
                 icon: "fa-twitter",
                 type: "project",
-                gradient: "linear-gradient(135deg, #1da1f2 0%, #0d8ecf 100%)"
+                gradient: "linear-gradient(135deg, #1da1f2 0%, #0d8ecf 100%)",
+                cardStyle: "card-gradient",
+                skills: [
+                    { name: "APIs", value: 92, color: "#1da1f2" },
+                    { name: "Scraping", value: 88, color: "#3b82f6" },
+                    { name: "Node.js", value: 85, color: "#22c55e" },
+                    { name: "Auto", value: 90, color: "#f97316" }
+                ],
+                summaries: [
+                    { icon: "fa-twitter", title: "Social Auto", sub: "Engagement bots", color: "blue" }
+                ]
             },
             {
-                title: "ESS Dashboard",
+                title: "Enterprise Task",
                 role: "Full-Stack Developer",
-                period: "2023-Present",
-                icon: "fa-chart-line",
+                dateRange: "1/1/2023 - Present",
+                icon: "fa-tasks",
                 type: "project",
-                gradient: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
+                gradient: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
+                cardStyle: "card-gradient",
+                skills: [
+                    { name: "React", value: 85, color: "#43e97b" },
+                    { name: "Node.js", value: 88, color: "#22c55e" },
+                    { name: "DB", value: 80, color: "#06b6d4" },
+                    { name: "UI/UX", value: 75, color: "#f97316" }
+                ],
+                summaries: [
+                    { icon: "fa-tasks", title: "Task Manager", sub: "Enterprise workflow", color: "green" }
+                ]
             },
             {
                 title: "CardGrader",
                 role: "iOS Developer",
-                period: "2024-Present",
+                dateRange: "1/1/2024 - Present",
                 icon: "fa-mobile-alt",
                 type: "project",
-                gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+                gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+                cardStyle: "card-gradient",
+                skills: [
+                    { name: "Swift", value: 80, color: "#f093fb" },
+                    { name: "iOS", value: 85, color: "#f5576c" },
+                    { name: "ML", value: 75, color: "#a855f7" },
+                    { name: "UI", value: 88, color: "#06b6d4" }
+                ],
+                summaries: [
+                    { icon: "fa-mobile-alt", title: "iOS App", sub: "Card grading AI", color: "purple" }
+                ]
             },
             {
                 title: "PokeGraderApp",
                 role: "iOS Developer",
-                period: "2024-Present",
+                dateRange: "1/1/2024 - Present",
                 icon: "fa-gamepad",
                 type: "project",
-                gradient: "linear-gradient(135deg, #ffcc00 0%, #ff6600 100%)"
+                gradient: "linear-gradient(135deg, #ffcc00 0%, #ff6600 100%)",
+                cardStyle: "card-gradient",
+                skills: [
+                    { name: "Swift", value: 82, color: "#ffcc00" },
+                    { name: "Vision", value: 78, color: "#ff6600" },
+                    { name: "CoreML", value: 80, color: "#f97316" },
+                    { name: "UI", value: 85, color: "#22c55e" }
+                ],
+                summaries: [
+                    { icon: "fa-gamepad", title: "Pokemon Cards", sub: "AI grading app", color: "orange" }
+                ]
             },
             {
                 title: "LifeCoach",
                 role: "iOS Developer",
-                period: "2024-Present",
+                dateRange: "1/1/2024 - Present",
                 icon: "fa-heart",
                 type: "project",
-                gradient: "linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%)"
+                gradient: "linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%)",
+                cardStyle: "card-gradient",
+                skills: [
+                    { name: "Swift", value: 80, color: "#ff6b6b" },
+                    { name: "Health", value: 85, color: "#ee5a5a" },
+                    { name: "AI", value: 78, color: "#a855f7" },
+                    { name: "UX", value: 88, color: "#22c55e" }
+                ],
+                summaries: [
+                    { icon: "fa-heart", title: "Wellness App", sub: "AI life coaching", color: "orange" }
+                ]
             },
             {
-                title: "Telugu Music",
-                role: "Curator / Enthusiast",
-                period: "Ongoing",
-                icon: "fa-music",
+                title: "DJ AiY",
+                role: "DJ / Music Producer",
+                dateRange: "Ongoing",
+                icon: "fa-headphones",
                 type: "project",
-                gradient: "linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)"
+                gradient: "linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)",
+                cardStyle: "card-gradient",
+                skills: [
+                    { name: "Music", value: 90, color: "#a18cd1" },
+                    { name: "Production", value: 85, color: "#fbc2eb" },
+                    { name: "DJ", value: 88, color: "#a855f7" },
+                    { name: "Audio", value: 82, color: "#06b6d4" }
+                ],
+                summaries: [
+                    { icon: "fa-headphones", title: "Music Production", sub: "Telugu music", color: "purple" }
+                ]
             },
             {
                 title: "Cursor/AI Tooling",
                 role: "Power User / Specialist",
-                period: "2024-Present",
+                dateRange: "1/1/2024 - Present",
                 icon: "fa-code",
                 type: "project",
-                gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+                gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+                cardStyle: "card-gradient",
+                skills: [
+                    { name: "AI Tools", value: 95, color: "#4facfe" },
+                    { name: "Prompts", value: 92, color: "#00f2fe" },
+                    { name: "Dev", value: 88, color: "#22c55e" },
+                    { name: "Auto", value: 90, color: "#f97316" }
+                ],
+                summaries: [
+                    { icon: "fa-code", title: "AI Tooling", sub: "Cursor specialist", color: "blue" }
+                ]
             },
             {
                 title: "Codex/Claude Code",
                 role: "AI Dev Specialist",
-                period: "2024-Present",
+                dateRange: "1/1/2024 - Present",
                 icon: "fa-brain",
                 type: "project",
-                gradient: "linear-gradient(135deg, #c471ed 0%, #f64f59 100%)"
+                gradient: "linear-gradient(135deg, #c471ed 0%, #f64f59 100%)",
+                cardStyle: "card-gradient",
+                skills: [
+                    { name: "AI Dev", value: 93, color: "#c471ed" },
+                    { name: "Claude", value: 95, color: "#f64f59" },
+                    { name: "Prompts", value: 90, color: "#a855f7" },
+                    { name: "Code", value: 88, color: "#22c55e" }
+                ],
+                summaries: [
+                    { icon: "fa-brain", title: "AI Development", sub: "Claude/Codex expert", color: "purple" }
+                ]
             }
         ];
 
         const codeChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789(){}[]<>;:,._-+=!@#$%^&*";
+
+        let cardStreamInstance = null;
+        
+        function togglePlayPause() {
+            if (cardStreamInstance) {
+                cardStreamInstance.toggleAnimation();
+            }
+        }
 
         class CardStreamController {
             constructor() {
                 this.container = document.getElementById("cardStream");
                 this.cardLine = document.getElementById("cardLine");
                 this.position = 0;
-                this.velocity = 80;
+                this.velocity = 105;
                 this.direction = -1;
                 this.isAnimating = true;
                 this.isDragging = false;
+                this.isHolding = false;
+                this.frozenPosition = 0;
+                this.activeWrapper = null;
                 this.lastTime = performance.now();
                 this.lastMouseX = 0;
                 this.mouseVelocity = 0;
                 this.friction = 0.95;
-                this.minVelocity = 40;
+                this.minVelocity = 52;
                 this.containerWidth = 0;
                 this.cardLineWidth = 0;
                 this.init();
+            }
+            
+            toggleAnimation() {
+                this.isAnimating = !this.isAnimating;
+                const btn = document.getElementById("playPauseBtn");
+                if (btn) {
+                    btn.textContent = this.isAnimating ? "⏸️ Pause" : "▶️ Play";
+                }
+                if (this.isAnimating && this.velocity === 0) {
+                    this.velocity = 105;
+                } else if (!this.isAnimating) {
+                    this.velocity = 0;
+                }
+            }
+            
+            holdCard(wrapper) {
+                this.isHolding = true;
+                this.isAnimating = false;
+                this.velocity = 0;
+                this.frozenPosition = this.position;
+                this.activeWrapper = wrapper;
+                
+                wrapper.classList.add("card-held");
+                
+                // Update button
+                const btn = document.getElementById("playPauseBtn");
+                if (btn) {
+                    btn.textContent = "▶️ Play";
+                }
+            }
+            
+            releaseCard(wrapper) {
+                if (!wrapper || !wrapper.classList.contains("card-held")) return;
+                
+                this.isHolding = false;
+                this.activeWrapper = null;
+                
+                wrapper.classList.remove("card-held");
             }
 
             init() {
@@ -360,7 +779,7 @@
 
             calculateDimensions() {
                 this.containerWidth = this.container.offsetWidth;
-                const cardWidth = 320;
+                const cardWidth = 380;
                 const cardGap = 50;
                 const cardCount = this.cardLine.children.length;
                 this.cardLineWidth = (cardWidth + cardGap) * cardCount;
@@ -410,7 +829,7 @@
                     this.velocity = Math.abs(this.mouseVelocity);
                     this.direction = this.mouseVelocity > 0 ? 1 : -1;
                 } else {
-                    this.velocity = 80;
+                    this.velocity = 105;
                 }
                 this.isAnimating = true;
             }
@@ -419,6 +838,14 @@
                 const currentTime = performance.now();
                 const deltaTime = (currentTime - this.lastTime) / 1000;
                 this.lastTime = currentTime;
+
+                // If holding, keep position frozen
+                if (this.isHolding) {
+                    this.position = this.frozenPosition;
+                    this.cardLine.style.transform = `translateX(${this.position}px)`;
+                    requestAnimationFrame(() => this.animate());
+                    return;
+                }
 
                 if (this.isAnimating && !this.isDragging) {
                     if (this.velocity > this.minVelocity) {
@@ -434,9 +861,9 @@
             }
 
             updateCardPosition() {
-                const cardWidth = 320;
+                const cardWidth = 380;
                 const cardGap = 50;
-                const totalCards = careers.length; // 15 cards now
+                const totalCards = careers.length;
                 
                 // Calculate position where last card is centered
                 const stopPosition = -(cardWidth + cardGap) * (totalCards - 1) + this.containerWidth / 2 - cardWidth / 2;
@@ -447,7 +874,7 @@
                     this.isAnimating = false;
                     // Pause 3 seconds, then restart from beginning
                     setTimeout(() => {
-                        this.position = this.containerWidth / 2 - cardWidth / 2; // Start with first card centered
+                        this.position = this.containerWidth / 2 - cardWidth / 2;
                         this.isAnimating = true;
                     }, 3000);
                 }
@@ -491,68 +918,104 @@
                 const wrapper = document.createElement("div");
                 wrapper.className = "card-wrapper";
 
-                // Normal card
+                // Normal card (Credit Card Style)
                 const normalCard = document.createElement("div");
                 normalCard.className = "card card-normal";
-
-                // Card image - logo or icon
-                const cardImageContainer = document.createElement("div");
-                cardImageContainer.className = "card-image";
-                cardImageContainer.style.display = "flex";
-                cardImageContainer.style.alignItems = "center";
-                cardImageContainer.style.justifyContent = "center";
-                cardImageContainer.style.padding = "15px";
                 
-                if (career.logo) {
-                    // Company logo
-                    cardImageContainer.style.background = "transparent";
-                    const logoImg = document.createElement("img");
-                    logoImg.src = career.logo;
-                    logoImg.alt = career.title;
-                    logoImg.style.maxWidth = "90%";
-                    logoImg.style.maxHeight = "100%";
-                    logoImg.style.objectFit = "contain";
-                    logoImg.style.borderRadius = "0";
-                    logoImg.style.background = "transparent";
-                    logoImg.style.padding = "0";
-                    cardImageContainer.appendChild(logoImg);
-                } else if (career.icon) {
-                    // Project with icon
-                    cardImageContainer.style.background = career.gradient;
-                    const icon = document.createElement("i");
-                    icon.className = `fas ${career.icon}`;
-                    icon.style.fontSize = "3rem";
-                    icon.style.color = "rgba(255,255,255,0.9)";
-                    cardImageContainer.appendChild(icon);
+                // Add card style variant
+                if (career.cardStyle) {
+                    normalCard.classList.add(career.cardStyle);
                 }
 
-                // Card content
-                const content = document.createElement("div");
-                content.className = "card-content";
+                // For gradient cards, set the background
+                if (career.gradient) {
+                    normalCard.style.background = career.gradient;
+                }
 
-                const title = document.createElement("div");
-                title.className = "card-title";
-                title.textContent = career.title;
+                // Card Header (Brand logo/icon and name)
+                const cardHeader = document.createElement("div");
+                cardHeader.className = "card-header";
 
-                const roleDiv = document.createElement("div");
-                roleDiv.className = "card-tech";
+                const cardBrand = document.createElement("div");
+                cardBrand.className = "card-brand";
+
+                if (career.logo) {
+                    const brandLogo = document.createElement("img");
+                    brandLogo.className = "card-brand-logo";
+                    brandLogo.src = career.logo;
+                    brandLogo.alt = career.title;
+                    brandLogo.onerror = () => { brandLogo.style.display = 'none'; };
+                    cardBrand.appendChild(brandLogo);
+                } else if (career.icon) {
+                    const brandIcon = document.createElement("div");
+                    brandIcon.className = "card-brand-icon";
+                    brandIcon.innerHTML = `<i class="fas ${career.icon}"></i>`;
+                    cardBrand.appendChild(brandIcon);
+                }
+
+                const brandName = document.createElement("span");
+                brandName.className = "card-brand-name";
+                brandName.textContent = career.title;
+                cardBrand.appendChild(brandName);
+
+                // Contactless icon
+                const contactlessIcon = document.createElement("div");
+                contactlessIcon.className = "contactless-icon";
+                contactlessIcon.innerHTML = `
+                    <svg viewBox="0 0 24 24">
+                        <path d="M8.5 8.5c0-1.93 1.57-3.5 3.5-3.5" stroke-linecap="round"/>
+                        <path d="M6 8c0-3.31 2.69-6 6-6" stroke-linecap="round"/>
+                        <path d="M4 8c0-4.42 3.58-8 8-8" stroke-linecap="round"/>
+                    </svg>
+                `;
+
+                cardHeader.appendChild(cardBrand);
+                cardHeader.appendChild(contactlessIcon);
+                normalCard.appendChild(cardHeader);
+
+                // Chip area
+                const chipArea = document.createElement("div");
+                chipArea.className = "card-chip-area";
+
+                const chip = document.createElement("div");
+                chip.className = "card-chip";
+
+                chipArea.appendChild(chip);
+                normalCard.appendChild(chipArea);
+
+                // Date range display
+                const cardNumber = document.createElement("div");
+                cardNumber.className = "card-number";
+                cardNumber.textContent = career.dateRange;
+                normalCard.appendChild(cardNumber);
+
+                // Card Footer (Holder name and network logo)
+                const cardFooter = document.createElement("div");
+                cardFooter.className = "card-footer";
+
+                const holderInfo = document.createElement("div");
+                holderInfo.className = "card-holder-info";
+
+                const holderName = document.createElement("div");
+                holderName.className = "card-holder-name";
+                holderName.textContent = "Navneet Garimella, aka Nitin G.";
+
+                holderInfo.appendChild(holderName);
+
+                const networkLogo = document.createElement("div");
+                networkLogo.className = "card-network-logo";
                 
-                const roleTag = document.createElement("span");
-                roleTag.className = "tech-tag";
-                roleTag.textContent = career.role;
-                roleDiv.appendChild(roleTag);
-                
-                const periodTag = document.createElement("span");
-                periodTag.className = "tech-tag";
-                periodTag.style.background = career.current ? "rgba(74, 222, 128, 0.3)" : "rgba(148, 163, 184, 0.2)";
-                periodTag.style.color = career.current ? "#4ade80" : "#94a3b8";
-                periodTag.textContent = career.period;
-                roleDiv.appendChild(periodTag);
+                const mcLogo = document.createElement("div");
+                mcLogo.className = "mastercard-logo";
+                mcLogo.innerHTML = `
+                    <div class="circle circle-1"></div>
+                    <div class="circle circle-2"></div>
+                `;
+                networkLogo.appendChild(mcLogo);
 
-                content.appendChild(title);
-                content.appendChild(roleDiv);
-                normalCard.appendChild(cardImageContainer);
-                normalCard.appendChild(content);
+                cardFooter.appendChild(holderInfo);
+                cardFooter.appendChild(networkLogo);
+                normalCard.appendChild(cardFooter);
 
                 // ASCII card
                 const asciiCard = document.createElement("div");
@@ -564,6 +1027,56 @@
 
                 wrapper.appendChild(normalCard);
                 wrapper.appendChild(asciiCard);
+
+                // Click to pause scroll and highlight card
+                const self = this;
+                let clickStartX = 0;
+                let clickStartY = 0;
+                
+                const onMouseDown = (e) => {
+                    clickStartX = e.clientX;
+                    clickStartY = e.clientY;
+                };
+                
+                const onMouseUp = (e) => {
+                    const deltaX = Math.abs(e.clientX - clickStartX);
+                    const deltaY = Math.abs(e.clientY - clickStartY);
+                    
+                    if (deltaX < 10 && deltaY < 10) {
+                        // Clear previous selection
+                        document.querySelectorAll(".card-wrapper.card-held").forEach(w => {
+                            w.classList.remove("card-held");
+                        });
+                        // Select this card and pause
+                        self.holdCard(wrapper);
+                    }
+                };
+                
+                wrapper.addEventListener("mousedown", onMouseDown);
+                wrapper.addEventListener("mouseup", onMouseUp);
+                
+                // Touch events
+                let touchStartX = 0;
+                let touchStartY = 0;
+                
+                wrapper.addEventListener("touchstart", (e) => {
+                    touchStartX = e.touches[0].clientX;
+                    touchStartY = e.touches[0].clientY;
+                }, { passive: true });
+                
+                wrapper.addEventListener("touchend", (e) => {
+                    const touch = e.changedTouches[0];
+                    const deltaX = Math.abs(touch.clientX - touchStartX);
+                    const deltaY = Math.abs(touch.clientY - touchStartY);
+                    
+                    if (deltaX < 10 && deltaY < 10) {
+                        document.querySelectorAll(".card-wrapper.card-held").forEach(w => {
+                            w.classList.remove("card-held");
+                        });
+                        self.holdCard(wrapper);
+                    }
+                });
+
                 return wrapper;
             }
 
@@ -611,7 +1124,6 @@
 
             populateCardLine() {
                 this.cardLine.innerHTML = "";
-                // 15 cards: 6 careers + 9 projects
                 const totalCards = careers.length;
                 for (let i = 0; i < totalCards; i++) {
                     this.cardLine.appendChild(this.createCardWrapper(i));
@@ -648,13 +1160,13 @@
 
             resize() {
                 this.canvas.width = window.innerWidth;
-                this.canvas.height = 220;
+                this.canvas.height = 260;
             }
 
             createParticle() {
                 return {
                     x: Math.random() * window.innerWidth,
-                    y: Math.random() * 220,
+                    y: Math.random() * 260,
                     vx: (Math.random() - 0.3) * 0.5,
                     vy: (Math.random() - 0.5) * 0.2,
                     radius: Math.random() * 2 + 0.5,
@@ -684,64 +1196,176 @@
             }
         }
 
-        // Scanner line
-        class ScannerLine {
+        // Enhanced Scanner with dissolving particle effect
+        class ParticleScanner {
             constructor() {
                 this.canvas = document.getElementById("scannerCanvas");
                 this.ctx = this.canvas.getContext("2d");
+                this.particles = [];
+                this.maxParticles = 600;
+                this.intensity = 0.8;
+                this.lightBarWidth = 3;
+                this.fadeZone = 50;
                 this.init();
             }
 
             init() {
                 this.resize();
+                this.createGradientCache();
+                this.initParticles();
                 this.animate();
                 window.addEventListener("resize", () => this.resize());
             }
 
             resize() {
-                this.canvas.width = window.innerWidth;
-                this.canvas.height = 280;
+                this.w = window.innerWidth;
+                this.h = 320;
+                this.canvas.width = this.w;
+                this.canvas.height = this.h;
+                this.lightBarX = this.w / 2;
             }
 
-            animate() {
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                
-                const x = this.canvas.width / 2;
-                const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
-                gradient.addColorStop(0, "rgba(192, 132, 252, 0)");
-                gradient.addColorStop(0.2, "rgba(192, 132, 252, 0.8)");
-                gradient.addColorStop(0.5, "rgba(192, 132, 252, 1)");
-                gradient.addColorStop(0.8, "rgba(192, 132, 252, 0.8)");
-                gradient.addColorStop(1, "rgba(192, 132, 252, 0)");
+            createGradientCache() {
+                this.gradientCanvas = document.createElement("canvas");
+                this.gradientCtx = this.gradientCanvas.getContext("2d");
+                this.gradientCanvas.width = 16;
+                this.gradientCanvas.height = 16;
 
-                // Glow
-                this.ctx.shadowColor = "rgba(192, 132, 252, 0.8)";
-                this.ctx.shadowBlur = 20;
+                const half = 8;
+                const gradient = this.gradientCtx.createRadialGradient(half, half, 0, half, half, half);
+                gradient.addColorStop(0, "rgba(255, 255, 255, 1)");
+                gradient.addColorStop(0.3, "rgba(196, 181, 253, 0.8)");
+                gradient.addColorStop(0.7, "rgba(139, 92, 246, 0.4)");
+                gradient.addColorStop(1, "transparent");
+
+                this.gradientCtx.fillStyle = gradient;
+                this.gradientCtx.beginPath();
+                this.gradientCtx.arc(half, half, half, 0, Math.PI * 2);
+                this.gradientCtx.fill();
+            }
+
+            createParticle() {
+                return {
+                    x: this.lightBarX + (Math.random() - 0.5) * this.lightBarWidth,
+                    y: Math.random() * this.h,
+                    vx: Math.random() * 0.8 + 0.2,
+                    vy: (Math.random() - 0.5) * 0.3,
+                    radius: Math.random() * 1.5 + 0.5,
+                    alpha: Math.random() * 0.4 + 0.6,
+                    life: 1.0,
+                    decay: Math.random() * 0.02 + 0.005,
+                    twinkle: Math.random() * 0.1
+                };
+            }
+
+            initParticles() {
+                for (let i = 0; i < this.maxParticles; i++) {
+                    this.particles.push(this.createParticle());
+                }
+            }
+
+            drawLightBar() {
+                const x = this.lightBarX;
                 
+                // Outer glow
+                const glowGradient = this.ctx.createLinearGradient(x - 30, 0, x + 30, 0);
+                glowGradient.addColorStop(0, "rgba(139, 92, 246, 0)");
+                glowGradient.addColorStop(0.5, "rgba(139, 92, 246, 0.3)");
+                glowGradient.addColorStop(1, "rgba(139, 92, 246, 0)");
+                
+                this.ctx.fillStyle = glowGradient;
+                this.ctx.fillRect(x - 30, 0, 60, this.h);
+
+                // Vertical fade gradient
+                const verticalGradient = this.ctx.createLinearGradient(0, 0, 0, this.h);
+                verticalGradient.addColorStop(0, "rgba(192, 132, 252, 0)");
+                verticalGradient.addColorStop(0.15, "rgba(192, 132, 252, 1)");
+                verticalGradient.addColorStop(0.5, "rgba(255, 255, 255, 1)");
+                verticalGradient.addColorStop(0.85, "rgba(192, 132, 252, 1)");
+                verticalGradient.addColorStop(1, "rgba(192, 132, 252, 0)");
+
+                // Main line with glow
+                this.ctx.shadowColor = "rgba(192, 132, 252, 0.8)";
+                this.ctx.shadowBlur = 15;
                 this.ctx.beginPath();
                 this.ctx.moveTo(x, 0);
-                this.ctx.lineTo(x, this.canvas.height);
-                this.ctx.strokeStyle = gradient;
+                this.ctx.lineTo(x, this.h);
+                this.ctx.strokeStyle = verticalGradient;
                 this.ctx.lineWidth = 3;
                 this.ctx.stroke();
 
-                // Core line
+                // Core white line
                 this.ctx.shadowBlur = 0;
                 this.ctx.beginPath();
                 this.ctx.moveTo(x, 0);
-                this.ctx.lineTo(x, this.canvas.height);
+                this.ctx.lineTo(x, this.h);
                 this.ctx.strokeStyle = "rgba(255, 255, 255, 0.9)";
                 this.ctx.lineWidth = 1;
                 this.ctx.stroke();
+            }
+
+            animate() {
+                this.ctx.clearRect(0, 0, this.w, this.h);
+                
+                // Draw light bar first
+                this.drawLightBar();
+
+                // Update and draw particles
+                this.ctx.globalCompositeOperation = "lighter";
+                
+                for (let i = 0; i < this.particles.length; i++) {
+                    const p = this.particles[i];
+                    
+                    // Update position
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.life -= p.decay;
+                    
+                    // Twinkle effect
+                    const twinkleAlpha = p.alpha + Math.sin(Date.now() * 0.01 + i) * p.twinkle;
+                    
+                    // Fade based on vertical position
+                    let fadeAlpha = 1;
+                    if (p.y < this.fadeZone) {
+                        fadeAlpha = p.y / this.fadeZone;
+                    } else if (p.y > this.h - this.fadeZone) {
+                        fadeAlpha = (this.h - p.y) / this.fadeZone;
+                    }
+
+                    // Draw particle
+                    if (p.life > 0) {
+                        this.ctx.globalAlpha = twinkleAlpha * p.life * fadeAlpha;
+                        this.ctx.drawImage(
+                            this.gradientCanvas,
+                            p.x - p.radius,
+                            p.y - p.radius,
+                            p.radius * 2,
+                            p.radius * 2
+                        );
+                    }
+
+                    // Reset particle if dead or off screen
+                    if (p.life <= 0 || p.x > this.w + 10) {
+                        this.particles[i] = this.createParticle();
+                    }
+                }
+
+                // Spawn new particles
+                if (Math.random() < this.intensity && this.particles.length < this.maxParticles) {
+                    this.particles.push(this.createParticle());
+                }
+
+                this.ctx.globalCompositeOperation = "source-over";
+                this.ctx.globalAlpha = 1;
 
                 requestAnimationFrame(() => this.animate());
             }
         }
 
         // Initialize
-        new CardStreamController();
+        cardStreamInstance = new CardStreamController();
         new ParticleSystem();
-        new ScannerLine();
+        new ParticleScanner();
     </script>
 </body>
 </html>

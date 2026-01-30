@@ -166,12 +166,8 @@ body:has([value="zoom-scroll"]:checked) .content {
     transform: translate3d(0%, -100%, 0);
   }
 
-  50% {
+  50%, 100% {
     transform: none;
-  }
-
-  100% {
-    transform: translate3d(0%, 100%, 0);
   }
 }
 

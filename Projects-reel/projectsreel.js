@@ -15,6 +15,8 @@ class CardStreamController {
     this.direction = -1; // Move left (oldest to newest)
     this.isAnimating = true;
     this.isDragging = false;
+    this.isHolding = false;
+    this.frozenPosition = 0;
 
     this.lastTime = 0;
     this.lastMouseX = 0;
@@ -126,6 +128,14 @@ class CardStreamController {
     const deltaTime = (currentTime - this.lastTime) / 1000;
     this.lastTime = currentTime;
 
+    // If holding, keep position frozen
+    if (this.isHolding) {
+      this.position = this.frozenPosition;
+      this.cardLine.style.transform = `translateX(${this.position}px)`;
+      requestAnimationFrame(() => this.animate());
+      return;
+    }
+
     if (this.isAnimating && !this.isDragging) {
       if (this.velocity > this.minVelocity) {
         this.velocity *= this.friction;
@@ -179,11 +189,20 @@ class CardStreamController {
 
   toggleAnimation() {
     this.isAnimating = !this.isAnimating;
-    const btn = document.querySelector(".control-btn");
-    btn.textContent = this.isAnimating ? "⏸️ Pause" : "▶️ Play";
+    const btn = document.querySelector(".play-pause-btn");
+    if (btn) {
+      btn.textContent = this.isAnimating ? "⏸️ Pause" : "▶️ Play";
+    }
 
     if (this.isAnimating) {
+      // Resume with default velocity if stopped
+      if (this.velocity === 0) {
+        this.velocity = 80;
+      }
       this.cardLine.style.animation = "none";
+    } else {
+      // Stop velocity when pausing
+      this.velocity = 0;
     }
   }
 
@@ -193,6 +212,7 @@ class CardStreamController {
     this.direction = -1;
     this.isAnimating = true;
     this.isDragging = false;
+    this.isHolding = false;
 
     this.cardLine.style.animation = "none";
     this.cardLine.style.transform = `translateX(${this.position}px)`;
@@ -200,8 +220,10 @@ class CardStreamController {
 
     this.updateSpeedIndicator();
 
-    const btn = document.querySelector(".control-btn");
-    btn.textContent = "⏸️ Pause";
+    const btn = document.querySelector(".play-pause-btn");
+    if (btn) {
+      btn.textContent = "⏸️ Pause";
+    }
   }
 
   changeDirection() {
@@ -333,45 +355,155 @@ class CardStreamController {
   createCardWrapper(index) {
     const wrapper = document.createElement("div");
     wrapper.className = "card-wrapper";
+    wrapper.dataset.index = index;
 
     const normalCard = document.createElement("div");
     normalCard.className = "card card-normal";
 
-    // Career logos in chronological order (oldest to current)
-    const careerLogos = [
-      { src: "../Logos/alarm.jpeg", name: "Alarm.com", year: "2016-2017" },
-      { src: "../Logos/bloom.png", name: "Bloom Energy", year: "2017-2018" },
-      { src: "../Logos/asiasociety.jpg", name: "Asia Society", year: "2018-2021" },
-      { src: "../Logos/sonicwall.jpg", name: "SonicWall", year: "2021" },
-      { src: "../Logos/microsoft.webp", name: "Microsoft", year: "2021-2022" },
-      { src: "../Logos/walmart.jpg", name: "Walmart", year: "2021-Present", current: true },
+    // Career data in chronological order (oldest to current)
+    const careerData = [
+      { 
+        src: "../Logos/alarm.jpeg", 
+        name: "Alarm.com", 
+        dateRange: "6/1/2016 - 5/31/2017",
+        cardStyle: "card-dark",
+        role: "Software Engineering Intern",
+        description: "Details coming soon..."
+      },
+      { 
+        src: "../Logos/bloom.png", 
+        name: "Bloom Energy", 
+        dateRange: "6/1/2017 - 5/31/2018",
+        cardStyle: "card-metallic",
+        role: "Software Engineering Intern",
+        description: "Details coming soon..."
+      },
+      { 
+        src: "../Logos/asiasociety.jpg", 
+        name: "Asia Society", 
+        dateRange: "6/1/2018 - 5/31/2021",
+        cardStyle: "",
+        role: "Role Title",
+        description: "Details coming soon..."
+      },
+      { 
+        src: "../Logos/sonicwall.jpg", 
+        name: "SonicWall", 
+        dateRange: "1/1/2021 - 6/30/2021",
+        cardStyle: "card-dark",
+        role: "Role Title",
+        description: "Details coming soon..."
+      },
+      { 
+        src: "../Logos/microsoft.webp", 
+        name: "Microsoft", 
+        dateRange: "6/1/2021 - 5/31/2022",
+        cardStyle: "card-metallic",
+        role: "Role Title",
+        description: "Details coming soon..."
+      },
+      { 
+        src: "../Logos/walmart.jpg", 
+        name: "Walmart", 
+        current: true,
+        dateRange: "9/1/2021 - Present",
+        cardStyle: "card-gold",
+        role: "Role Title",
+        description: "Details coming soon..."
+      },
     ];
 
-    const logoData = careerLogos[index % careerLogos.length];
+    const data = careerData[index % careerData.length];
     
-    const cardImage = document.createElement("img");
-    cardImage.className = "card-image";
-    cardImage.src = logoData.src;
-    cardImage.alt = logoData.name;
+    // Add card style variant
+    if (data.cardStyle) {
+      normalCard.classList.add(data.cardStyle);
+    }
 
-    cardImage.onerror = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = 400;
-      canvas.height = 250;
-      const ctx = canvas.getContext("2d");
+    // Card Header (Brand logo and name)
+    const cardHeader = document.createElement("div");
+    cardHeader.className = "card-header";
 
-      const gradient = ctx.createLinearGradient(0, 0, 400, 250);
-      gradient.addColorStop(0, "#667eea");
-      gradient.addColorStop(1, "#764ba2");
+    const cardBrand = document.createElement("div");
+    cardBrand.className = "card-brand";
 
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, 400, 250);
-
-      cardImage.src = canvas.toDataURL();
+    const brandLogo = document.createElement("img");
+    brandLogo.className = "card-brand-logo";
+    brandLogo.src = data.src;
+    brandLogo.alt = data.name;
+    brandLogo.onerror = () => {
+      brandLogo.style.display = 'none';
     };
 
-    normalCard.appendChild(cardImage);
+    const brandName = document.createElement("span");
+    brandName.className = "card-brand-name";
+    brandName.textContent = data.name;
 
+    cardBrand.appendChild(brandLogo);
+    cardBrand.appendChild(brandName);
+    cardHeader.appendChild(cardBrand);
+
+    // Contactless icon in top right
+    const contactlessTop = document.createElement("div");
+    contactlessTop.className = "contactless-icon";
+    contactlessTop.innerHTML = `
+      <svg viewBox="0 0 24 24">
+        <path d="M12 2C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17h8v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z" fill="none"/>
+        <path d="M8.5 8.5c0-1.93 1.57-3.5 3.5-3.5" stroke-linecap="round"/>
+        <path d="M6 8c0-3.31 2.69-6 6-6" stroke-linecap="round"/>
+        <path d="M4 8c0-4.42 3.58-8 8-8" stroke-linecap="round"/>
+      </svg>
+    `;
+    cardHeader.appendChild(contactlessTop);
+
+    normalCard.appendChild(cardHeader);
+
+    // Chip area
+    const chipArea = document.createElement("div");
+    chipArea.className = "card-chip-area";
+
+    const chip = document.createElement("div");
+    chip.className = "card-chip";
+
+    chipArea.appendChild(chip);
+    normalCard.appendChild(chipArea);
+
+    // Date range display
+    const cardNumber = document.createElement("div");
+    cardNumber.className = "card-number";
+    cardNumber.textContent = data.dateRange;
+    normalCard.appendChild(cardNumber);
+
+    // Card Footer (Holder name and network logo)
+    const cardFooter = document.createElement("div");
+    cardFooter.className = "card-footer";
+
+    const holderInfo = document.createElement("div");
+    holderInfo.className = "card-holder-info";
+
+    const holderName = document.createElement("div");
+    holderName.className = "card-holder-name";
+    holderName.textContent = "Navneet Garimella, aka Nitin G.";
+
+    holderInfo.appendChild(holderName);
+
+    const networkLogo = document.createElement("div");
+    networkLogo.className = "card-network-logo";
+    
+    // Mastercard-style logo
+    const mcLogo = document.createElement("div");
+    mcLogo.className = "mastercard-logo";
+    mcLogo.innerHTML = `
+      <div class="circle circle-1"></div>
+      <div class="circle circle-2"></div>
+    `;
+    networkLogo.appendChild(mcLogo);
+
+    cardFooter.appendChild(holderInfo);
+    cardFooter.appendChild(networkLogo);
+    normalCard.appendChild(cardFooter);
+
+    // ASCII Card (for scan effect)
     const asciiCard = document.createElement("div");
     asciiCard.className = "card card-ascii";
 
@@ -385,10 +517,90 @@ class CardStreamController {
     asciiContent.textContent = this.generateCode(width, height);
 
     asciiCard.appendChild(asciiContent);
+    
+    // Create dropdown for experience details
+    const dropdown = document.createElement("div");
+    dropdown.className = "card-dropdown";
+    dropdown.innerHTML = `
+      <div class="dropdown-content">
+        <div class="dropdown-role">${data.role}</div>
+        <div class="dropdown-description">${data.description}</div>
+      </div>
+    `;
+    
     wrapper.appendChild(normalCard);
     wrapper.appendChild(asciiCard);
+    wrapper.appendChild(dropdown);
+
+    // Hold event listeners for this card
+    let holdTimer = null;
+    const holdDelay = 150; // ms before triggering hold
+    
+    const startHold = (e) => {
+      // Don't interfere with dragging
+      if (this.isDragging) return;
+      
+      holdTimer = setTimeout(() => {
+        this.holdCard(wrapper, data);
+      }, holdDelay);
+    };
+    
+    const endHold = () => {
+      if (holdTimer) {
+        clearTimeout(holdTimer);
+        holdTimer = null;
+      }
+      this.releaseCard(wrapper);
+    };
+    
+    wrapper.addEventListener("mousedown", startHold);
+    wrapper.addEventListener("mouseup", endHold);
+    wrapper.addEventListener("mouseleave", endHold);
+    wrapper.addEventListener("touchstart", startHold, { passive: true });
+    wrapper.addEventListener("touchend", endHold);
+    wrapper.addEventListener("touchcancel", endHold);
 
     return wrapper;
+  }
+  
+  holdCard(wrapper, data) {
+    // Stop all animation completely
+    this.isHolding = true;
+    this.isAnimating = false;
+    this.velocity = 0;
+    
+    // Show dropdown
+    wrapper.classList.add("card-held");
+    const dropdown = wrapper.querySelector(".card-dropdown");
+    if (dropdown) {
+      dropdown.classList.add("visible");
+    }
+    
+    // Freeze the position
+    this.frozenPosition = this.position;
+  }
+  
+  releaseCard(wrapper) {
+    if (!this.isHolding) return;
+    
+    this.isHolding = false;
+    
+    // Hide dropdown
+    wrapper.classList.remove("card-held");
+    const dropdown = wrapper.querySelector(".card-dropdown");
+    if (dropdown) {
+      dropdown.classList.remove("visible");
+    }
+    
+    // Keep animation STOPPED after release
+    this.velocity = 0;
+    this.isAnimating = false;
+    
+    // Update pause/play button text
+    const btn = document.querySelector(".play-pause-btn");
+    if (btn) {
+      btn.textContent = "▶️ Play";
+    }
   }
 
   updateCardClipping() {
