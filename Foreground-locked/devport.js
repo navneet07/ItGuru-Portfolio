@@ -17,7 +17,6 @@ function initializeApp() {
     initScrollEffects();
     initFormHandlers();
     initMobileMenu();
-    updateThemeUI();
     AppState.isLoaded = true;
 }
 
