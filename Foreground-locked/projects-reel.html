@@ -63,21 +63,20 @@
         }
 
         .card-normal {
-            background: transparent;
-            box-shadow: none;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
             z-index: 2;
             clip-path: inset(0 0 0 var(--clip-right, 0%));
-            border: none;
+            border: 1px solid rgba(148, 163, 184, 0.2);
         }
 
         .card-image {
             width: 100%;
-            height: 140px;
-            object-fit: contain;
-            border-radius: 0;
-            background: transparent;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 12px 12px 0 0;
         }
 
         .card-content {
@@ -201,56 +200,130 @@
         </div>
         <div class="drag-hint">
             <i class="fas fa-hand-pointer"></i>
-            <span>Drag to explore career journey</span>
+            <span>Drag to explore career & projects</span>
         </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // Career data - chronological order (oldest to current)
+        // Career + Projects data - chronological order
         const careers = [
+            // === CAREER ===
             {
                 title: "Alarm.com",
                 role: "Technical Product Support",
                 period: "2016-2017",
                 logo: "logos/alarm.jpeg",
-                gradient: "linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%)"
+                type: "career"
             },
             {
                 title: "Bloom Energy",
                 role: "Desktop Support Engineer",
                 period: "2017-2018",
                 logo: "logos/bloom.png",
-                gradient: "linear-gradient(135deg, #2d8659 0%, #4caf50 100%)"
+                type: "career"
             },
             {
                 title: "Asia Society",
                 role: "Lead Help Desk Support",
                 period: "2018-2021",
                 logo: "logos/asiasociety.jpg",
-                gradient: "linear-gradient(135deg, #c41e3a 0%, #e53935 100%)"
+                type: "career"
             },
             {
                 title: "SonicWall",
                 role: "Systems Engineer",
                 period: "2021",
                 logo: "logos/sonicwall.jpg",
-                gradient: "linear-gradient(135deg, #f57c00 0%, #ff9800 100%)"
+                type: "career"
             },
             {
                 title: "Microsoft",
                 role: "Technical Program Manager",
                 period: "2021-2022",
                 logo: "logos/microsoft.webp",
-                gradient: "linear-gradient(135deg, #00a4ef 0%, #7fba00 100%)"
+                type: "career"
             },
             {
                 title: "Walmart",
                 role: "Lead Senior Analyst",
                 period: "2021-Present",
                 logo: "logos/walmart.jpg",
-                gradient: "linear-gradient(135deg, #0071ce 0%, #ffc220 100%)",
+                type: "career",
                 current: true
+            },
+            // === PERSONAL PROJECTS ===
+            {
+                title: "Bot Management",
+                role: "Founder / Lead Engineer",
+                period: "2023-Present",
+                icon: "fa-robot",
+                type: "project",
+                gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+            },
+            {
+                title: "Twitter/X Automation",
+                role: "Automation Engineer",
+                period: "2023-Present",
+                icon: "fa-twitter",
+                type: "project",
+                gradient: "linear-gradient(135deg, #1da1f2 0%, #0d8ecf 100%)"
+            },
+            {
+                title: "ESS Dashboard",
+                role: "Full-Stack Developer",
+                period: "2023-Present",
+                icon: "fa-chart-line",
+                type: "project",
+                gradient: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)"
+            },
+            {
+                title: "CardGrader",
+                role: "iOS Developer",
+                period: "2024-Present",
+                icon: "fa-mobile-alt",
+                type: "project",
+                gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)"
+            },
+            {
+                title: "PokeGraderApp",
+                role: "iOS Developer",
+                period: "2024-Present",
+                icon: "fa-gamepad",
+                type: "project",
+                gradient: "linear-gradient(135deg, #ffcc00 0%, #ff6600 100%)"
+            },
+            {
+                title: "LifeCoach",
+                role: "iOS Developer",
+                period: "2024-Present",
+                icon: "fa-heart",
+                type: "project",
+                gradient: "linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%)"
+            },
+            {
+                title: "Telugu Music",
+                role: "Curator / Enthusiast",
+                period: "Ongoing",
+                icon: "fa-music",
+                type: "project",
+                gradient: "linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)"
+            },
+            {
+                title: "Cursor/AI Tooling",
+                role: "Power User / Specialist",
+                period: "2024-Present",
+                icon: "fa-code",
+                type: "project",
+                gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)"
+            },
+            {
+                title: "Codex/Claude Code",
+                role: "AI Dev Specialist",
+                period: "2024-Present",
+                icon: "fa-brain",
+                type: "project",
+                gradient: "linear-gradient(135deg, #c471ed 0%, #f64f59 100%)"
             }
         ];
 
@@ -363,16 +436,16 @@
             updateCardPosition() {
                 const cardWidth = 320;
                 const cardGap = 50;
-                const totalCards = 6;
+                const totalCards = careers.length; // 15 cards now
                 
-                // Calculate position where Walmart (last card, index 5) is centered
-                const walmartStopPosition = -(cardWidth + cardGap) * (totalCards - 1) + this.containerWidth / 2 - cardWidth / 2;
+                // Calculate position where last card is centered
+                const stopPosition = -(cardWidth + cardGap) * (totalCards - 1) + this.containerWidth / 2 - cardWidth / 2;
                 
-                // Stop at Walmart before cycling through
-                if (this.direction === -1 && this.position <= walmartStopPosition) {
-                    this.position = walmartStopPosition;
+                // Stop at last card before cycling through
+                if (this.direction === -1 && this.position <= stopPosition) {
+                    this.position = stopPosition;
                     this.isAnimating = false;
-                    // Pause 3 seconds at Walmart, then restart from beginning
+                    // Pause 3 seconds, then restart from beginning
                     setTimeout(() => {
                         this.position = this.containerWidth / 2 - cardWidth / 2; // Start with first card centered
                         this.isAnimating = true;
@@ -422,25 +495,36 @@
                 const normalCard = document.createElement("div");
                 normalCard.className = "card card-normal";
 
-                // Card image - company logo only (no background)
+                // Card image - logo or icon
                 const cardImageContainer = document.createElement("div");
                 cardImageContainer.className = "card-image";
-                cardImageContainer.style.background = "transparent";
                 cardImageContainer.style.display = "flex";
                 cardImageContainer.style.alignItems = "center";
                 cardImageContainer.style.justifyContent = "center";
                 cardImageContainer.style.padding = "15px";
                 
-                const logoImg = document.createElement("img");
-                logoImg.src = career.logo;
-                logoImg.alt = career.title;
-                logoImg.style.maxWidth = "90%";
-                logoImg.style.maxHeight = "100%";
-                logoImg.style.objectFit = "contain";
-                logoImg.style.borderRadius = "0";
-                logoImg.style.background = "transparent";
-                logoImg.style.padding = "0";
-                cardImageContainer.appendChild(logoImg);
+                if (career.logo) {
+                    // Company logo
+                    cardImageContainer.style.background = "transparent";
+                    const logoImg = document.createElement("img");
+                    logoImg.src = career.logo;
+                    logoImg.alt = career.title;
+                    logoImg.style.maxWidth = "90%";
+                    logoImg.style.maxHeight = "100%";
+                    logoImg.style.objectFit = "contain";
+                    logoImg.style.borderRadius = "0";
+                    logoImg.style.background = "transparent";
+                    logoImg.style.padding = "0";
+                    cardImageContainer.appendChild(logoImg);
+                } else if (career.icon) {
+                    // Project with icon
+                    cardImageContainer.style.background = career.gradient;
+                    const icon = document.createElement("i");
+                    icon.className = `fas ${career.icon}`;
+                    icon.style.fontSize = "3rem";
+                    icon.style.color = "rgba(255,255,255,0.9)";
+                    cardImageContainer.appendChild(icon);
+                }
 
                 // Card content
                 const content = document.createElement("div");
@@ -527,8 +611,9 @@
 
             populateCardLine() {
                 this.cardLine.innerHTML = "";
-                // 6 career cards - chronological order
-                for (let i = 0; i < 6; i++) {
+                // 15 cards: 6 careers + 9 projects
+                const totalCards = careers.length;
+                for (let i = 0; i < totalCards; i++) {
                     this.cardLine.appendChild(this.createCardWrapper(i));
                 }
             }
