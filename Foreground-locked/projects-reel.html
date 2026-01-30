@@ -424,10 +424,6 @@
         <div class="card-stream" id="cardStream">
             <div class="card-line" id="cardLine"></div>
         </div>
-        <div class="reel-controls">
-            <button class="control-btn" id="playPauseBtn" onclick="togglePlayPause()">⏸️ Pause</button>
-            <span class="control-hint" id="controlHint">Click any card for details</span>
-        </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -441,6 +437,7 @@
                 dateRange: "6/1/2016 - 5/31/2017",
                 logo: "logos/alarm.jpeg",
                 type: "career",
+                employment: "contract",
                 cardStyle: "card-dark",
                 skills: [
                     { name: "Support", value: 85, color: "#f97316" },
@@ -459,6 +456,7 @@
                 dateRange: "6/1/2017 - 5/31/2018",
                 logo: "logos/bloom.png",
                 type: "career",
+                employment: "contract",
                 cardStyle: "card-metallic",
                 skills: [
                     { name: "Desktop", value: 90, color: "#f97316" },
@@ -477,6 +475,7 @@
                 dateRange: "6/1/2018 - 5/31/2021",
                 logo: "logos/asiasociety.jpg",
                 type: "career",
+                employment: "fulltime",
                 cardStyle: "",
                 skills: [
                     { name: "Leadership", value: 80, color: "#f97316" },
@@ -495,6 +494,7 @@
                 dateRange: "1/1/2021 - 6/30/2021",
                 logo: "logos/sonicwall.jpg",
                 type: "career",
+                employment: "contract",
                 cardStyle: "card-dark",
                 skills: [
                     { name: "Security", value: 85, color: "#f97316" },
@@ -513,6 +513,7 @@
                 dateRange: "6/1/2021 - 5/31/2022",
                 logo: "logos/microsoft.webp",
                 type: "career",
+                employment: "contract",
                 cardStyle: "card-metallic",
                 skills: [
                     { name: "Program", value: 85, color: "#f97316" },
@@ -531,6 +532,7 @@
                 dateRange: "9/1/2021 - Present",
                 logo: "logos/walmart.jpg",
                 type: "career",
+                employment: "fulltime",
                 current: true,
                 cardStyle: "card-gold",
                 skills: [
@@ -551,6 +553,7 @@
                 dateRange: "1/1/2023 - Present",
                 icon: "fa-robot",
                 type: "project",
+                employment: "freelance",
                 gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
                 cardStyle: "card-gradient",
                 skills: [
@@ -570,6 +573,7 @@
                 dateRange: "1/1/2023 - Present",
                 icon: "fa-twitter",
                 type: "project",
+                employment: "freelance",
                 gradient: "linear-gradient(135deg, #1da1f2 0%, #0d8ecf 100%)",
                 cardStyle: "card-gradient",
                 skills: [
@@ -588,6 +592,7 @@
                 dateRange: "1/1/2023 - Present",
                 icon: "fa-tasks",
                 type: "project",
+                employment: "freelance",
                 gradient: "linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)",
                 cardStyle: "card-gradient",
                 skills: [
@@ -606,6 +611,7 @@
                 dateRange: "1/1/2024 - Present",
                 icon: "fa-mobile-alt",
                 type: "project",
+                employment: "freelance",
                 gradient: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
                 cardStyle: "card-gradient",
                 skills: [
@@ -624,6 +630,7 @@
                 dateRange: "1/1/2024 - Present",
                 icon: "fa-gamepad",
                 type: "project",
+                employment: "freelance",
                 gradient: "linear-gradient(135deg, #ffcc00 0%, #ff6600 100%)",
                 cardStyle: "card-gradient",
                 skills: [
@@ -642,6 +649,7 @@
                 dateRange: "1/1/2024 - Present",
                 icon: "fa-heart",
                 type: "project",
+                employment: "freelance",
                 gradient: "linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%)",
                 cardStyle: "card-gradient",
                 skills: [
@@ -660,6 +668,7 @@
                 dateRange: "Ongoing",
                 icon: "fa-headphones",
                 type: "project",
+                employment: "freelance",
                 gradient: "linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)",
                 cardStyle: "card-gradient",
                 skills: [
@@ -678,6 +687,7 @@
                 dateRange: "1/1/2024 - Present",
                 icon: "fa-code",
                 type: "project",
+                employment: "freelance",
                 gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
                 cardStyle: "card-gradient",
                 skills: [
@@ -696,6 +706,7 @@
                 dateRange: "1/1/2024 - Present",
                 icon: "fa-brain",
                 type: "project",
+                employment: "freelance",
                 gradient: "linear-gradient(135deg, #c471ed 0%, #f64f59 100%)",
                 cardStyle: "card-gradient",
                 skills: [
@@ -1031,13 +1042,30 @@
                 const networkLogo = document.createElement("div");
                 networkLogo.className = "card-network-logo";
                 
-                const mcLogo = document.createElement("div");
-                mcLogo.className = "mastercard-logo";
-                mcLogo.innerHTML = `
-                    <div class="circle circle-1"></div>
-                    <div class="circle circle-2"></div>
-                `;
-                networkLogo.appendChild(mcLogo);
+                // Show different logo based on employment type
+                // fulltime = Visa, contract = Mastercard, freelance = Discover
+                if (career.employment === "fulltime") {
+                    const visaLogo = document.createElement("img");
+                    visaLogo.src = "logos/visa.png";
+                    visaLogo.alt = "Full-time";
+                    visaLogo.style.cssText = "height: 24px; width: auto; object-fit: contain;";
+                    networkLogo.appendChild(visaLogo);
+                } else if (career.employment === "freelance") {
+                    const discoverLogo = document.createElement("img");
+                    discoverLogo.src = "logos/discover.jpg";
+                    discoverLogo.alt = "Freelance";
+                    discoverLogo.style.cssText = "height: 24px; width: auto; object-fit: contain; border-radius: 4px;";
+                    networkLogo.appendChild(discoverLogo);
+                } else {
+                    // Default: Mastercard for contract
+                    const mcLogo = document.createElement("div");
+                    mcLogo.className = "mastercard-logo";
+                    mcLogo.innerHTML = `
+                        <div class="circle circle-1"></div>
+                        <div class="circle circle-2"></div>
+                    `;
+                    networkLogo.appendChild(mcLogo);
+                }
 
                 cardFooter.appendChild(holderInfo);
                 cardFooter.appendChild(networkLogo);
@@ -1065,9 +1093,6 @@
                 };
                 
                 const onMouseUp = (e) => {
-                    // Only allow clicks when paused (not animating)
-                    if (self.isAnimating) return;
-                    
                     const deltaX = Math.abs(e.clientX - clickStartX);
                     const deltaY = Math.abs(e.clientY - clickStartY);
                     
@@ -1076,7 +1101,9 @@
                         document.querySelectorAll(".card-wrapper.card-held").forEach(w => {
                             w.classList.remove("card-held");
                         });
-                        // Select this card and show modal
+                        // Pause scroll and show modal
+                        self.isAnimating = false;
+                        self.velocity = 0;
                         self.holdCard(wrapper, career);
                     }
                 };
@@ -1094,9 +1121,6 @@
                 }, { passive: true });
                 
                 wrapper.addEventListener("touchend", (e) => {
-                    // Only allow clicks when paused
-                    if (self.isAnimating) return;
-                    
                     const touch = e.changedTouches[0];
                     const deltaX = Math.abs(touch.clientX - touchStartX);
                     const deltaY = Math.abs(touch.clientY - touchStartY);
@@ -1105,6 +1129,9 @@
                         document.querySelectorAll(".card-wrapper.card-held").forEach(w => {
                             w.classList.remove("card-held");
                         });
+                        // Pause scroll and show modal
+                        self.isAnimating = false;
+                        self.velocity = 0;
                         self.holdCard(wrapper, career);
                     }
                 });
@@ -1398,6 +1425,17 @@
         cardStreamInstance = new CardStreamController();
         new ParticleSystem();
         new ParticleScanner();
+        
+        // Listen for modal close from parent to resume scroll
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'modalClosed' && cardStreamInstance) {
+                cardStreamInstance.isAnimating = true;
+                cardStreamInstance.velocity = 105;
+                document.querySelectorAll(".card-wrapper.card-held").forEach(w => {
+                    w.classList.remove("card-held");
+                });
+            }
+        });
     </script>
 </body>
 </html>

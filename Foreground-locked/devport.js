@@ -830,6 +830,12 @@ function initReelModal() {
     const closeModal = () => {
         modal.classList.remove('visible');
         backdrop.classList.remove('visible');
+        
+        // Notify iframe to resume scroll
+        const iframe = document.querySelector('.projects-reel-iframe');
+        if (iframe && iframe.contentWindow) {
+            iframe.contentWindow.postMessage({ type: 'modalClosed' }, '*');
+        }
     };
     
     closeBtn?.addEventListener('click', closeModal);
