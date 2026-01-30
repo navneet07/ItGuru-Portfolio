@@ -1829,20 +1829,32 @@
     <script src="devport.js"></script>
     
     <!-- GoatCounter Analytics -->
+    <script>
+        // Wait for GoatCounter to load, then fetch total visitor count
+        var gcInterval = setInterval(function() {
+            if (window.goatcounter && window.goatcounter.visit_count) {
+                clearInterval(gcInterval);
+                // Fetch TOTAL site views as JSON
+                fetch('https://tintin07.goatcounter.com/counter/TOTAL.json')
+                    .then(function(r) { return r.json(); })
+                    .then(function(data) {
+                        var el = document.getElementById('visitorCount');
+                        if (el && data && data.count) {
+                            el.textContent = data.count;
+                        }
+                    })
+                    .catch(function() {
+                        var el = document.getElementById('visitorCount');
+                        if (el) el.textContent = '—';
+                    });
+            }
+        }, 100);
+        
+        // Timeout after 5 seconds
+        setTimeout(function() { clearInterval(gcInterval); }, 5000);
+    </script>
     <script data-goatcounter="https://tintin07.goatcounter.com/count"
             async src="//gc.zgo.at/count.js"></script>
-    <script>
-        // Fetch and display visitor count
-        fetch('https://tintin07.goatcounter.com/counter/?p=/').then(response => response.text()).then(count => {
-            const counterEl = document.getElementById('visitorCount');
-            if (counterEl && count) {
-                counterEl.textContent = parseInt(count).toLocaleString();
-            }
-        }).catch(() => {
-            const counterEl = document.getElementById('visitorCount');
-            if (counterEl) counterEl.textContent = '—';
-        });
-    </script>
 </body>
 </html>
 
