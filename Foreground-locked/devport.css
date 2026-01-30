@@ -2145,7 +2145,7 @@ img {
     text-align: center;
 }
 
-/* Periodic Table Grid */
+/* Periodic Table Grid - Full 18-column layout */
 .periodic-table {
     display: grid;
     grid-template-columns: repeat(3, 160px);
@@ -2154,19 +2154,32 @@ img {
     justify-content: center;
 }
 
+.periodic-table.full-table {
+    grid-template-columns: repeat(18, 55px);
+    grid-template-rows: repeat(5, 55px) 20px repeat(2, 55px);
+    grid-gap: 4px;
+    margin: 2rem auto;
+    width: fit-content;
+    overflow-x: auto;
+    padding: 0.5rem;
+}
+
 .periodic-element {
     position: relative;
-    padding: 4px;
-    border-radius: 12px;
+    padding: 3px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transition: all 0.3s ease;
+}
+
+.full-table .periodic-element {
     aspect-ratio: 1;
 }
 
 .periodic-element-inner {
     background: var(--bg-card);
-    border-radius: 10px;
-    padding: 1rem;
+    border-radius: 6px;
+    padding: 0.5rem;
     width: 100%;
     height: 100%;
     display: flex;
@@ -2177,10 +2190,23 @@ img {
     border: 1px solid var(--border);
 }
 
+.full-table .periodic-element-inner {
+    padding: 4px;
+}
+
 .periodic-element .exp-year {
     font-size: 0.75rem;
     color: var(--text-muted);
     font-family: var(--font-code);
+}
+
+.periodic-element .number {
+    font-size: 7px;
+    position: absolute;
+    top: 5px;
+    left: 7px;
+    color: var(--text-muted);
+    opacity: 0.6;
 }
 
 .periodic-element .title {
@@ -2194,10 +2220,26 @@ img {
     background-clip: text;
 }
 
+.full-table .periodic-element .title {
+    font-size: 1.1rem;
+    margin: 0;
+    line-height: 1;
+}
+
 .periodic-element .description {
     font-size: 0.8rem;
     color: var(--text-secondary);
     text-align: center;
+}
+
+.full-table .periodic-element .description {
+    font-size: 6px;
+    line-height: 1.2;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-top: 2px;
 }
 
 .periodic-element .role {
@@ -2207,8 +2249,8 @@ img {
 }
 
 .periodic-element:hover {
-    transform: scale(1.1) translateY(-5px);
-    z-index: 10;
+    transform: scale(1.15);
+    z-index: 50;
 }
 
 .periodic-element:hover .periodic-element-inner {
@@ -2222,30 +2264,144 @@ img {
 
 .periodic-element:hover .description,
 .periodic-element:hover .role,
-.periodic-element:hover .exp-year {
+.periodic-element:hover .exp-year,
+.periodic-element:hover .number {
     color: var(--bg-dark);
+}
+
+/* Tooltip for skills */
+.periodic-element[data-tooltip]:after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    line-height: 1.4;
+    width: 180px;
+    text-align: left;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border);
+    pointer-events: none;
+}
+
+.periodic-element[data-tooltip]:hover:after {
+    opacity: 1;
+    visibility: visible;
+    top: 110%;
 }
 
 .current-badge {
     position: absolute;
-    top: -8px;
-    right: -8px;
+    top: -6px;
+    right: -6px;
     background: var(--accent);
     color: var(--bg-dark);
-    font-size: 0.65rem;
+    font-size: 0.5rem;
     font-weight: 700;
-    padding: 4px 8px;
-    border-radius: 20px;
+    padding: 2px 5px;
+    border-radius: 10px;
     text-transform: uppercase;
 }
 
-/* Element Colors */
-.periodic-element.leadership {
-    background: linear-gradient(135deg, #58ac30 0%, #a7df62 100%);
-    --el-color-1: #58ac30;
-    --el-color-2: #a7df62;
+/* Series labels and spacer */
+.series-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-left: 5px;
 }
 
+.series-indicator {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.series-indicator.career {
+    color: #f43f5e;
+}
+
+.series-indicator.projects {
+    color: #d946ef;
+}
+
+.series-name {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.series-spacer {
+    height: 15px;
+}
+
+/* Element Colors - 8 Categories */
+
+/* Enterprise Systems - Blue */
+.periodic-element.enterprise {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    --el-color-1: #0ea5e9;
+    --el-color-2: #38bdf8;
+}
+
+/* Network & Security - Green */
+.periodic-element.network {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    --el-color-1: #22c55e;
+    --el-color-2: #4ade80;
+}
+
+/* AI & Automation - Purple */
+.periodic-element.ai {
+    background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+    --el-color-1: #a855f7;
+    --el-color-2: #c084fc;
+}
+
+/* Data & Analytics - Cyan */
+.periodic-element.data {
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+    --el-color-1: #06b6d4;
+    --el-color-2: #22d3ee;
+}
+
+/* Integration & APIs - Orange */
+.periodic-element.integration {
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    --el-color-1: #f97316;
+    --el-color-2: #fb923c;
+}
+
+/* Leadership & Process - Yellow */
+.periodic-element.leadership {
+    background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
+    --el-color-1: #eab308;
+    --el-color-2: #facc15;
+}
+
+/* Career Elements - Red/Rose */
+.periodic-element.career {
+    background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+    --el-color-1: #f43f5e;
+    --el-color-2: #fb7185;
+}
+
+/* Personal Projects - Pink/Fuchsia */
+.periodic-element.projects {
+    background: linear-gradient(135deg, #d946ef 0%, #c026d3 100%);
+    --el-color-1: #d946ef;
+    --el-color-2: #e879f9;
+}
+
+/* Legacy colors for backward compatibility */
 .periodic-element.engineering {
     background: linear-gradient(135deg, #37cfdc 0%, #5a88e5 100%);
     --el-color-1: #37cfdc;
@@ -2272,22 +2428,77 @@ img {
     margin-top: 1rem;
 }
 
+.exp-legend.full-legend {
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+.legend-row {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
 .legend-item {
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
+.full-legend .legend-item {
+    gap: 0.35rem;
+}
+
+.full-legend .legend-text {
+    font-size: 0.7rem;
+}
+
 .legend-marker {
     width: 20px;
     height: 20px;
+}
+
+.full-legend .legend-marker {
+    width: 14px;
+    height: 14px;
     border-radius: 4px;
 }
 
-.legend-marker.leadership {
-    background: linear-gradient(135deg, #58ac30, #a7df62);
+.legend-marker.enterprise {
+    background: linear-gradient(135deg, #0ea5e9, #0284c7);
 }
 
+.legend-marker.network {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.legend-marker.ai {
+    background: linear-gradient(135deg, #a855f7, #9333ea);
+}
+
+.legend-marker.data {
+    background: linear-gradient(135deg, #06b6d4, #0891b2);
+}
+
+.legend-marker.integration {
+    background: linear-gradient(135deg, #f97316, #ea580c);
+}
+
+.legend-marker.leadership {
+    background: linear-gradient(135deg, #eab308, #ca8a04);
+}
+
+.legend-marker.career {
+    background: linear-gradient(135deg, #f43f5e, #e11d48);
+}
+
+.legend-marker.projects {
+    background: linear-gradient(135deg, #d946ef, #c026d3);
+}
+
+/* Legacy */
 .legend-marker.engineering {
     background: linear-gradient(135deg, #37cfdc, #5a88e5);
 }
@@ -2412,7 +2623,7 @@ img {
 }
 
 .exp-detail-symbol.leadership {
-    background: linear-gradient(135deg, #58ac30, #a7df62);
+    background: linear-gradient(135deg, #eab308, #ca8a04);
 }
 
 .exp-detail-symbol.engineering {
@@ -2425,6 +2636,10 @@ img {
 
 .exp-detail-symbol.admin {
     background: linear-gradient(135deg, #f3f9a6, #cbc634);
+}
+
+.exp-detail-symbol.career {
+    background: linear-gradient(135deg, #f43f5e, #e11d48);
 }
 
 .exp-detail-info {
@@ -2522,14 +2737,73 @@ img {
 }
 
 /* Responsive */
+@media (max-width: 1200px) {
+    .periodic-table.full-table {
+        grid-template-columns: repeat(18, 45px);
+        grid-template-rows: repeat(5, 45px) 15px repeat(2, 45px);
+        grid-gap: 3px;
+    }
+    
+    .full-table .periodic-element .title {
+        font-size: 0.9rem;
+    }
+    
+    .full-table .periodic-element .description {
+        font-size: 5px;
+    }
+    
+    .full-table .periodic-element .number {
+        font-size: 6px;
+    }
+}
+
+@media (max-width: 900px) {
+    .periodic-table.full-table {
+        grid-template-columns: repeat(18, 38px);
+        grid-template-rows: repeat(5, 38px) 12px repeat(2, 38px);
+        grid-gap: 2px;
+        overflow-x: auto;
+        max-width: 100%;
+    }
+    
+    .full-table .periodic-element .title {
+        font-size: 0.75rem;
+    }
+    
+    .full-table .periodic-element .description {
+        display: none;
+    }
+    
+    .series-name {
+        font-size: 8px;
+    }
+    
+    .legend-row {
+        gap: 0.75rem;
+    }
+    
+    .full-legend .legend-text {
+        font-size: 0.6rem;
+    }
+}
+
 @media (max-width: 768px) {
     .periodic-table {
         grid-template-columns: repeat(2, 140px);
         grid-gap: 15px;
     }
     
+    .periodic-table.full-table {
+        grid-template-columns: repeat(18, 32px);
+        grid-template-rows: repeat(5, 32px) 10px repeat(2, 32px);
+    }
+    
     .periodic-element .title {
         font-size: 2rem;
+    }
+    
+    .full-table .periodic-element .title {
+        font-size: 0.65rem;
     }
     
     .exp-legend {
