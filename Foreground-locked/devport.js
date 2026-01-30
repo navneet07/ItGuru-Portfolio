@@ -94,33 +94,8 @@ function updateLanguageUI() {
 }
 
 function initTheme() {
-    const themeToggle = document.getElementById('themeToggle');
-    if (themeToggle) {
-        themeToggle.addEventListener('click', toggleTheme);
-    }
-    setTheme(AppState.currentTheme);
-}
-
-function toggleTheme() {
-    const newTheme = AppState.currentTheme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-    localStorage.setItem('portfolio-theme', newTheme);
-}
-
-function setTheme(theme) {
-    AppState.currentTheme = theme;
-    document.body.setAttribute('data-theme', theme);
-    updateThemeUI();
-}
-
-function updateThemeUI() {
-    const themeToggle = document.getElementById('themeToggle');
-    if (themeToggle) {
-        const icon = themeToggle.querySelector('i');
-        if (icon) {
-            icon.className = AppState.currentTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-        }
-    }
+    // Always use dark theme
+    document.body.setAttribute('data-theme', 'dark');
 }
 
 function initNavigation() {
