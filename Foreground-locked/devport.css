@@ -867,13 +867,132 @@ img {
     font-size: 1.1rem;
     color: var(--text-secondary);
     line-height: 1.8;
-    margin-bottom: 3rem;
+    margin-bottom: 1rem;
+}
+
+.about-text.about-headline {
+    font-size: 1.75rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1.5rem;
+}
+
+.about-text.about-main {
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    line-height: 1.9;
+}
+
+.about-text.about-main strong {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.about-text.about-sub {
+    font-size: 1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 2rem;
+    opacity: 0.85;
+}
+
+/* Journey Timeline */
+.about-journey {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: rgba(139, 92, 246, 0.05);
+    border-radius: 12px;
+    border-left: 3px solid var(--primary-color);
+}
+
+.journey-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.journey-title i {
+    color: var(--primary-color);
+}
+
+.journey-highlights {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.journey-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.9rem;
+}
+
+.journey-year {
+    min-width: 50px;
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+    color: var(--primary-color);
+    font-size: 0.85rem;
+}
+
+.journey-text {
+    color: var(--text-secondary);
+}
+
+.journey-item.current {
+    padding: 0.5rem 0.75rem;
+    background: rgba(74, 222, 128, 0.1);
+    border-radius: 6px;
+    margin-left: -0.75rem;
+}
+
+.journey-item.current .journey-year {
+    color: #4ade80;
+}
+
+.journey-item.current .journey-text {
+    color: #4ade80;
+    font-weight: 600;
+}
+
+/* Code block enhancements */
+.code-line.indent-2 {
+    padding-left: 3rem;
+}
+
+.code-string.current-status {
+    color: #4ade80;
 }
 
 .about-stats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 2rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .about-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .about-text.about-headline {
+        font-size: 1.4rem;
+    }
+    
+    .journey-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
 }
 
 .stat-item {
