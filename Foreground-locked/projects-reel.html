@@ -421,24 +421,24 @@
                 const normalCard = document.createElement("div");
                 normalCard.className = "card card-normal";
 
-                // Card image - company logo
+                // Card image - company logo only (no background)
                 const cardImageContainer = document.createElement("div");
                 cardImageContainer.className = "card-image";
-                cardImageContainer.style.background = career.gradient;
+                cardImageContainer.style.background = "transparent";
                 cardImageContainer.style.display = "flex";
                 cardImageContainer.style.alignItems = "center";
                 cardImageContainer.style.justifyContent = "center";
-                cardImageContainer.style.padding = "10px";
+                cardImageContainer.style.padding = "15px";
                 
                 const logoImg = document.createElement("img");
                 logoImg.src = career.logo;
                 logoImg.alt = career.title;
-                logoImg.style.maxWidth = "80%";
-                logoImg.style.maxHeight = "80%";
+                logoImg.style.maxWidth = "90%";
+                logoImg.style.maxHeight = "100%";
                 logoImg.style.objectFit = "contain";
-                logoImg.style.borderRadius = "8px";
-                logoImg.style.background = "rgba(255,255,255,0.9)";
-                logoImg.style.padding = "8px";
+                logoImg.style.borderRadius = "0";
+                logoImg.style.background = "transparent";
+                logoImg.style.padding = "0";
                 cardImageContainer.appendChild(logoImg);
 
                 // Card content
