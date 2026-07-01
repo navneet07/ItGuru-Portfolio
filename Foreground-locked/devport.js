@@ -197,18 +197,38 @@ function initFormHandlers() {
     }
 }
 
-function handleFormSubmit(e) {
+async function handleFormSubmit(e) {
     e.preventDefault();
-    const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData);
-    console.log('Form submitted:', data);
-    
-    const message = AppState.currentLang === 'ar' 
-        ? 'تم إرسال الرسالة بنجاح!' 
-        : 'Message sent successfully!';
-    
-    alert(message);
-    e.target.reset();
+    const form = e.target;
+    const data = Object.fromEntries(new FormData(form));
+    const btn = form.querySelector('.btn-submit');
+    const btnSpan = btn ? btn.querySelector('span') : null;
+    const originalText = btnSpan ? btnSpan.textContent : '';
+    const ar = AppState.currentLang === 'ar';
+
+    if (btn) btn.disabled = true;
+    if (btnSpan) btnSpan.textContent = ar ? 'جارٍ الإرسال...' : 'Sending...';
+
+    try {
+        const res = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.error || 'request failed');
+        }
+        alert(ar ? 'تم إرسال الرسالة بنجاح!' : 'Message sent successfully! I\'ll get back to you soon.');
+        form.reset();
+    } catch (err) {
+        alert(ar
+            ? 'تعذّر إرسال الرسالة. يرجى مراسلتي مباشرة على ngarimella@gmail.com'
+            : 'Sorry, your message could not be sent. Please email me directly at ngarimella@gmail.com');
+    } finally {
+        if (btn) btn.disabled = false;
+        if (btnSpan) btnSpan.textContent = originalText;
+    }
 }
 
 function initMobileMenu() {

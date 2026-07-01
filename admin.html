@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Portfolio Admin — Inquiries</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary: #c084fc; --bg: #0f172a; --bg2: #020617; --card: #1e293b;
+      --border: #334155; --text: #f1f5f9; --muted: #94a3b8; --green: #86efac; --red: #fca5a5;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: radial-gradient(1200px 600px at 80% -10%, rgba(192,132,252,0.10), transparent), var(--bg);
+      color: var(--text); min-height: 100vh;
+    }
+    .mono { font-family: 'Fira Code', ui-monospace, Menlo, monospace; }
+
+    /* Login */
+    .login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+    .login-card { width: 100%; max-width: 400px; background: var(--card); border: 1px solid var(--border);
+      border-radius: 18px; padding: 2.25rem; box-shadow: 0 20px 50px rgba(0,0,0,0.45); }
+    .brand { text-align: center; margin-bottom: 0.4rem; }
+    .brand .logo { font-family: 'Fira Code', monospace; color: var(--primary); font-weight: 700; font-size: 1.1rem; }
+    .login-card h1 { font-size: 1.35rem; text-align: center; margin-bottom: 0.4rem; }
+    .login-card p.sub { text-align: center; color: var(--muted); font-size: 0.9rem; margin-bottom: 1.6rem; }
+    .field { position: relative; margin-bottom: 1rem; }
+    .field > i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--muted); }
+    input[type="password"], input[type="text"], input[type="search"] {
+      width: 100%; padding: 0.8rem 1rem 0.8rem 2.6rem; background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text); font-size: 0.95rem; outline: none; transition: border-color 0.2s; }
+    input:focus { border-color: var(--primary); }
+    .btn { width: 100%; padding: 0.85rem; border: none; border-radius: 10px; cursor: pointer;
+      background: linear-gradient(135deg, #c084fc, #a78bfa); color: #0f172a; font-weight: 700; font-size: 0.95rem;
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: transform 0.15s, box-shadow 0.2s; }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(192,132,252,0.35); }
+    .btn:disabled { opacity: 0.6; cursor: default; transform: none; box-shadow: none; }
+    .msg-error { color: var(--red); font-size: 0.85rem; margin-top: 0.9rem; text-align: center; min-height: 1rem; }
+
+    /* Dashboard */
+    .dash { max-width: 920px; margin: 0 auto; padding: 1.5rem; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1.25rem 0 1rem; flex-wrap: wrap; }
+    .topbar h1 { font-size: 1.5rem; display: flex; align-items: center; gap: 0.6rem; }
+    .pill { font-size: 0.78rem; padding: 0.15rem 0.6rem; border-radius: 999px; font-weight: 600; }
+    .pill.total { background: rgba(148,163,184,0.15); color: var(--muted); border: 1px solid var(--border); }
+    .pill.unread { background: rgba(192,132,252,0.18); color: var(--primary); border: 1px solid rgba(192,132,252,0.4); }
+    .topbar-actions { display: flex; gap: 0.55rem; flex-wrap: wrap; }
+    .btn-ghost { background: var(--card); color: var(--text); border: 1px solid var(--border); border-radius: 10px;
+      padding: 0.55rem 0.95rem; cursor: pointer; font-size: 0.83rem; display: inline-flex; align-items: center; gap: 0.45rem;
+      transition: border-color 0.2s, color 0.2s; width: auto; }
+    .btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+
+    .searchbar { position: relative; margin-bottom: 1.25rem; }
+    .searchbar > i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--muted); }
+
+    .empty { text-align: center; color: var(--muted); padding: 4rem 1rem; }
+    .empty i { font-size: 2.5rem; color: var(--border); margin-bottom: 1rem; display: block; }
+
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.2rem 1.4rem;
+      margin-bottom: 1rem; transition: border-color 0.2s, transform 0.15s; position: relative; }
+    .card:hover { border-color: rgba(192,132,252,0.4); transform: translateY(-2px); }
+    .card.unread { border-left: 3px solid var(--primary); }
+    .card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .card-who { font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; gap: 0.55rem; }
+    .new-badge { background: var(--primary); color: #0f172a; font-size: 0.62rem; font-weight: 800; letter-spacing: 0.5px;
+      padding: 0.1rem 0.4rem; border-radius: 5px; text-transform: uppercase; }
+    .card-email { color: var(--primary); font-size: 0.85rem; text-decoration: none; }
+    .card-email:hover { text-decoration: underline; }
+    .card-date { color: var(--muted); font-size: 0.8rem; white-space: nowrap; }
+    .card-subject { color: var(--text); font-weight: 600; margin: 0.8rem 0 0.35rem; font-size: 0.95rem; }
+    .card-subject .tag { color: var(--muted); font-weight: 400; }
+    .card-body { color: var(--muted); font-size: 0.92rem; line-height: 1.55; white-space: pre-wrap; }
+    .card-foot { margin-top: 0.95rem; display: flex; gap: 1.1rem; flex-wrap: wrap; align-items: center; }
+    .act { font-size: 0.82rem; color: var(--muted); background: none; border: none; cursor: pointer;
+      display: inline-flex; gap: 0.4rem; align-items: center; text-decoration: none; padding: 0; transition: color 0.2s; }
+    .act:hover { color: var(--primary); }
+    .act.reply { color: var(--primary); }
+    .act.danger:hover { color: var(--red); }
+    .loading { text-align: center; color: var(--muted); padding: 3rem; }
+  </style>
+</head>
+<body>
+  <!-- LOGIN -->
+  <div id="loginView" class="login-wrap">
+    <form class="login-card" id="loginForm" autocomplete="off">
+      <div class="brand"><span class="logo">&lt;itguru /&gt;</span></div>
+      <h1>Admin Access</h1>
+      <p class="sub">Sign in to view portfolio inquiries</p>
+      <div class="field">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="pw" placeholder="Password" required autofocus />
+      </div>
+      <button class="btn" type="submit" id="loginBtn"><span>Sign In</span><i class="fas fa-arrow-right"></i></button>
+      <div class="msg-error" id="loginError"></div>
+    </form>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashView" class="dash" style="display:none;">
+    <div class="topbar">
+      <h1><i class="fas fa-inbox" style="color:var(--primary)"></i> Inquiries
+        <span class="pill total" id="countTotal">0</span>
+        <span class="pill unread" id="countUnread">0 new</span>
+      </h1>
+      <div class="topbar-actions">
+        <button class="btn-ghost" id="exportBtn"><i class="fas fa-file-csv"></i> Export</button>
+        <button class="btn-ghost" id="refreshBtn"><i class="fas fa-rotate"></i> Refresh</button>
+        <button class="btn-ghost" id="logoutBtn"><i class="fas fa-right-from-bracket"></i> Logout</button>
+      </div>
+    </div>
+    <div class="searchbar">
+      <i class="fas fa-magnifying-glass"></i>
+      <input type="search" id="search" placeholder="Search name, email, subject, or message…" />
+    </div>
+    <div id="list"></div>
+  </div>
+
+  <script>
+    var loginView = document.getElementById('loginView'), dashView = document.getElementById('dashView');
+    var loginForm = document.getElementById('loginForm'), loginBtn = document.getElementById('loginBtn');
+    var loginError = document.getElementById('loginError'), listEl = document.getElementById('list');
+    var countTotal = document.getElementById('countTotal'), countUnread = document.getElementById('countUnread');
+    var searchEl = document.getElementById('search');
+    var ALL = [];
+
+    function pw() { return sessionStorage.getItem('adminpw') || ''; }
+    function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}); }
+    function fmtDate(ts){ try { return new Date(ts).toLocaleString(undefined,{dateStyle:'medium',timeStyle:'short'}); } catch(e){ return ''; } }
+    function showDash(){ loginView.style.display='none'; dashView.style.display='block'; }
+    function showLogin(){ dashView.style.display='none'; loginView.style.display='flex'; }
+
+    function render() {
+      var q = (searchEl.value || '').toLowerCase().trim();
+      var rows = ALL.filter(function(m){
+        if (!q) return true;
+        return (m.name+' '+m.email+' '+(m.subject||'')+' '+m.message).toLowerCase().indexOf(q) !== -1;
+      });
+      countTotal.textContent = ALL.length + (ALL.length === 1 ? ' total' : ' total');
+      var unread = ALL.filter(function(m){ return !m.read; }).length;
+      countUnread.textContent = unread + ' new';
+      countUnread.style.display = unread ? '' : 'none';
+
+      if (!rows.length) {
+        listEl.innerHTML = '<div class="empty"><i class="far fa-envelope-open"></i><div>' +
+          (ALL.length ? 'No matches.' : 'No inquiries yet.') + '</div>' +
+          (ALL.length ? '' : '<div style="font-size:0.85rem;margin-top:0.4rem;">Messages from your contact form will appear here.</div>') +
+          '</div>';
+        return;
+      }
+      listEl.innerHTML = rows.map(function(m){
+        var subj = m.subject ? esc(m.subject) : '<span class="tag">(no subject)</span>';
+        var firstName = String(m.name || '').trim().split(/\s+/)[0] || 'there';
+        var gmailUrl = 'https://mail.google.com/mail/?view=cm&fs=1'
+          + '&to=' + encodeURIComponent(m.email)
+          + '&su=' + encodeURIComponent('Re: ' + (m.subject || 'Your message'))
+          + '&body=' + encodeURIComponent('Hi ' + firstName + ',\n\n');
+        var readToggle = m.read
+          ? '<button class="act" data-act="unread" data-id="'+m.id+'"><i class="far fa-circle"></i> Mark unread</button>'
+          : '<button class="act" data-act="read" data-id="'+m.id+'"><i class="fas fa-circle-check"></i> Mark read</button>';
+        return '<div class="card '+(m.read?'':'unread')+'">' +
+          '<div class="card-head"><div>' +
+            '<div class="card-who">'+esc(m.name)+(m.read?'':' <span class="new-badge">New</span>')+'</div>' +
+            '<a class="card-email" href="mailto:'+esc(m.email)+'">'+esc(m.email)+'</a>' +
+          '</div><div class="card-date">'+fmtDate(m.ts)+'</div></div>' +
+          '<div class="card-subject">'+subj+'</div>' +
+          '<div class="card-body">'+esc(m.message)+'</div>' +
+          '<div class="card-foot">' +
+            '<a class="act reply" href="'+gmailUrl+'" target="_blank" rel="noopener"><i class="fas fa-reply"></i> Reply in Gmail</a>' +
+            readToggle +
+            '<button class="act danger" data-act="delete" data-id="'+m.id+'"><i class="far fa-trash-can"></i> Delete</button>' +
+          '</div></div>';
+      }).join('');
+    }
+
+    async function load() {
+      try {
+        var res = await fetch('/api/inbox', { headers: { 'x-admin-password': pw() } });
+        if (res.status === 401) { sessionStorage.removeItem('adminpw'); loginError.textContent='Incorrect password.'; showLogin(); return; }
+        if (!res.ok) throw new Error('server');
+        var data = await res.json();
+        ALL = data.messages || [];
+        loginError.textContent=''; showDash(); render();
+      } catch(e) {
+        if (dashView.style.display==='block') listEl.innerHTML = '<div class="empty"><i class="fas fa-triangle-exclamation"></i><div>Could not load messages.</div></div>';
+        else loginError.textContent = 'Could not reach the server.';
+      } finally {
+        loginBtn.disabled=false; loginBtn.querySelector('span').textContent='Sign In';
+      }
+    }
+
+    async function doAction(id, action) {
+      // optimistic local update
+      if (action === 'delete') ALL = ALL.filter(function(m){ return m.id !== id; });
+      else ALL = ALL.map(function(m){ return m.id===id ? Object.assign({}, m, { read: action==='read' }) : m; });
+      render();
+      try {
+        await fetch('/api/inbox', {
+          method:'POST', headers:{ 'Content-Type':'application/json', 'x-admin-password': pw() },
+          body: JSON.stringify({ action: action, id: id })
+        });
+      } catch(e) { load(); } // resync on failure
+    }
+
+    function exportCSV() {
+      var head = ['Name','Email','Subject','Message','Date','Read'];
+      var rows = ALL.map(function(m){
+        return [m.name, m.email, m.subject||'', m.message, new Date(m.ts).toISOString(), m.read?'yes':'no']
+          .map(function(v){ return '"' + String(v).replace(/"/g,'""') + '"'; }).join(',');
+      });
+      var csv = head.join(',') + '\n' + rows.join('\n');
+      var blob = new Blob([csv], { type:'text/csv' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = 'inquiries.csv'; a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    loginForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      loginBtn.disabled=true; loginBtn.querySelector('span').textContent='Checking…';
+      sessionStorage.setItem('adminpw', document.getElementById('pw').value);
+      load();
+    });
+    searchEl.addEventListener('input', render);
+    document.getElementById('refreshBtn').addEventListener('click', function(){ listEl.innerHTML='<div class="loading">Loading…</div>'; load(); });
+    document.getElementById('exportBtn').addEventListener('click', exportCSV);
+    document.getElementById('logoutBtn').addEventListener('click', function(){ sessionStorage.removeItem('adminpw'); document.getElementById('pw').value=''; showLogin(); });
+    listEl.addEventListener('click', function(e){
+      var b = e.target.closest('[data-act]'); if (!b) return;
+      var act = b.getAttribute('data-act'), id = b.getAttribute('data-id');
+      if (act === 'delete' && !confirm('Delete this inquiry? This cannot be undone.')) return;
+      doAction(id, act);
+    });
+
+    (function(){ if (pw()) load(); })();
+  </script>
+</body>
+</html>
