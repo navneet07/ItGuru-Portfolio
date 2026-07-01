@@ -856,7 +856,7 @@ img {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 4rem;
-    align-items: center;
+    align-items: start;
 }
 
 .about-text {
@@ -1028,8 +1028,10 @@ img {
 }
 
 .code-block {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
+    background: rgba(18, 20, 30, 0.42);
+    -webkit-backdrop-filter: blur(12px) saturate(120%);
+    backdrop-filter: blur(12px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.09);
     border-radius: 12px;
     padding: 3rem;
     font-family: var(--font-code);
