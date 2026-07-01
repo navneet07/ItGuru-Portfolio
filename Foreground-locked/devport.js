@@ -129,6 +129,16 @@ function initNavigation() {
             });
         }
     });
+
+    // "View Projects": open the Experience tab, then scroll to the Projects block
+    document.querySelectorAll('[data-jump]').forEach(link => {
+        link.addEventListener('click', () => {
+            const anchor = document.getElementById(link.getAttribute('data-jump'));
+            if (anchor) {
+                setTimeout(() => anchor.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
+            }
+        });
+    });
 }
 
 function showSection(sectionId) {
