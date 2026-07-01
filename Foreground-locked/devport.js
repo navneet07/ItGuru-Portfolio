@@ -17,7 +17,30 @@ function initializeApp() {
     initScrollEffects();
     initFormHandlers();
     initMobileMenu();
+    initInquiryDot();
     AppState.isLoaded = true;
+}
+
+// Login-button notification dot: red = teaser/none, green = unread inquiry, amber = read/pending
+function initInquiryDot() {
+    var dot = document.getElementById('loginDot');
+    if (!dot) return;
+    function paint(cls) {
+        dot.classList.remove('dot-red', 'dot-green', 'dot-amber');
+        dot.classList.add(cls);
+    }
+    function refresh() {
+        fetch('/api/inbox-status', { cache: 'no-store' })
+            .then(function (r) { return r.ok ? r.json() : { total: 0, unread: 0 }; })
+            .then(function (d) {
+                if (d && d.unread > 0) paint('dot-green');
+                else if (d && d.total > 0) paint('dot-amber');
+                else paint('dot-red');
+            })
+            .catch(function () { /* keep the red teaser */ });
+    }
+    refresh();
+    setInterval(refresh, 60000); // re-check every minute
 }
 
 function loadPreferences() {

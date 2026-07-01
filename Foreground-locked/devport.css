@@ -3670,6 +3670,24 @@ img {
 }
 .nav-login i { font-size: 0.8rem; }
 
+/* Inquiry notification dot on the Login button */
+.login-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-inline-start: 2px;
+    vertical-align: middle;
+    box-shadow: 0 0 6px currentColor;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+.login-dot.dot-red   { background: #ff4d4f; color: #ff4d4f; }
+.login-dot.dot-amber { background: #ffb020; color: #ffb020; }
+.login-dot.dot-green { background: #22c55e; color: #22c55e; animation: loginDotPulse 1.4s ease-in-out infinite; }
+@keyframes loginDotPulse {
+    0%, 100% { box-shadow: 0 0 4px currentColor; transform: scale(1); }
+    50%      { box-shadow: 0 0 11px currentColor; transform: scale(1.25); }
+}
+
 @media (max-width: 560px) {
     .nav-login-text { display: none; }   /* icon-only on small screens */
     .nav-login { padding: 0.45rem 0.6rem; }
