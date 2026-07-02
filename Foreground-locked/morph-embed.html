@@ -41,6 +41,7 @@
     </div>
     <canvas id="webglCanvas"></canvas>
 
+    <script src="arky-points.js"></script>
     <script type="importmap">
       {
         "imports": {
@@ -96,7 +97,8 @@
             { name: 'Cube', generator: generateCube },
             { name: 'Torus', generator: generateTorus },
             { name: 'Galaxy', generator: generateGalaxy },
-            { name: 'Wave', generator: generateWave }
+            { name: 'Wave', generator: generateWave },
+            { name: 'Arky', generator: generateArkyLogo }
         ];
         let currentShapeIndex = 0;
 
@@ -206,6 +208,26 @@
                 const y = Math.sin(dist * Math.PI * frequency) * Math.cos(angle * 2) * waveScale * (1 - dist);
                 points[i * 3] = x;
                 points[i * 3 + 1] = y;
+                points[i * 3 + 2] = z;
+            }
+            return points;
+        }
+
+        function generateArkyLogo(count, size) {
+            const points = new Float32Array(count * 3);
+            const src = (typeof window !== 'undefined' && window.__ARKY_POINTS) ? window.__ARKY_POINTS : null;
+            if (!src || src.length < 4) {
+                return generateSphere(count, size); // graceful fallback if points missing
+            }
+            const n = src.length / 2;          // number of sampled logo points
+            const scale = size * 1.05;         // fit the logo into the shape volume
+            for (let i = 0; i < count; i++) {
+                const p = (i % n) * 2;                              // spread particles across the logo
+                const jx = (Math.random() - 0.5) * 0.09 * size;    // tiny jitter for density
+                const jy = (Math.random() - 0.5) * 0.09 * size;
+                const z  = (Math.random() - 0.5) * 0.7;            // thin depth so it reads 3D when rotating
+                points[i * 3]     = src[p] * scale + jx;
+                points[i * 3 + 1] = src[p + 1] * scale + jy;
                 points[i * 3 + 2] = z;
             }
             return points;
