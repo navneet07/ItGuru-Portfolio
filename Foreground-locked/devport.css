@@ -2840,6 +2840,52 @@ img {
     margin-bottom: 1.5rem;
 }
 
+.exp-story {
+    position: relative;
+    margin-bottom: 1.5rem;
+    padding: 1.15rem 1.35rem 1.2rem 1.45rem;
+    border-left: 3px solid var(--accent);
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015));
+}
+
+.exp-story h4 {
+    font-size: 1rem;
+    color: var(--text-primary);
+    margin: 0 0 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: 0.01em;
+}
+
+.exp-story h4 i {
+    color: var(--accent);
+}
+
+.exp-story p {
+    font-size: 0.97rem;
+    line-height: 1.85;
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+.exp-story .exp-story-arc {
+    display: block;
+    margin-top: 0.8rem;
+    padding-top: 0.7rem;
+    border-top: 1px dashed rgba(255, 255, 255, 0.12);
+    font-style: italic;
+    color: var(--text-primary);
+    opacity: 0.95;
+}
+
+.exp-story .exp-story-arc i {
+    color: var(--green);
+    margin-right: 0.4rem;
+    font-style: normal;
+}
+
 .exp-achievements h4,
 .exp-tech-stack h4 {
     font-size: 1rem;
