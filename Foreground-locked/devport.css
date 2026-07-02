@@ -252,13 +252,23 @@ img {
 }
 
 .brand-logo {
-    font-family: var(--font-code);
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--primary);
     display: flex;
     align-items: center;
     gap: 0.3rem;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.brand-img {
+    height: 48px;
+    width: auto;
+    display: block;
+    filter: drop-shadow(0 0 7px rgba(150, 90, 255, 0.4));
+    transition: transform 0.25s ease, filter 0.25s ease;
+}
+.brand-logo:hover .brand-img {
+    transform: scale(1.07);
+    filter: drop-shadow(0 0 12px rgba(120, 200, 255, 0.6));
 }
 
 .logo-bracket {
