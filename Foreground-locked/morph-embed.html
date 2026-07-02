@@ -222,10 +222,10 @@
             const n = src.length / 2;          // number of sampled logo points
             const scale = size * 1.05;         // fit the logo into the shape volume
             for (let i = 0; i < count; i++) {
-                const p = (i % n) * 2;                              // spread particles across the logo
-                const jx = (Math.random() - 0.5) * 0.09 * size;    // tiny jitter for density
-                const jy = (Math.random() - 0.5) * 0.09 * size;
-                const z  = (Math.random() - 0.5) * 0.7;            // thin depth so it reads 3D when rotating
+                const p = (i % n) * 2;                               // trace the logo lines
+                const jx = (Math.random() - 0.5) * 0.012 * size;     // minimal jitter — keep lines crisp
+                const jy = (Math.random() - 0.5) * 0.012 * size;
+                const z  = (Math.random() - 0.5) * 0.16;             // very thin depth (stays readable)
                 points[i * 3]     = src[p] * scale + jx;
                 points[i * 3 + 1] = src[p + 1] * scale + jy;
                 points[i * 3 + 2] = z;
