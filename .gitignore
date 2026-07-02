@@ -46,3 +46,4 @@ temp/
 # Cache
 .cache/
 *.cache
+.vercel
