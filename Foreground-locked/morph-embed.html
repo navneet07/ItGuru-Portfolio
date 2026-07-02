@@ -62,6 +62,10 @@
         import anime from 'animejs';
         import { createNoise3D, createNoise4D } from 'simplex-noise';
 
+        // Keep the morph timeline running even if the tab is briefly backgrounded,
+        // so a click-then-switch-tabs never leaves isMorphing stuck true.
+        anime.suspendWhenDocumentHidden = false;
+
         let scene, camera, renderer, controls, clock;
         let composer, bloomPass;
         let particlesGeometry, particlesMaterial, particleSystem;
@@ -93,7 +97,10 @@
         };
 
         const SHAPES = [
-            { name: 'Arky', generator: generateArkyLogo }
+            { name: 'Arky', generator: generateArkyLogo },
+            { name: 'Sphere', generator: generateSphere },
+            { name: 'Cube', generator: generateCube },
+            { name: 'Pyramid', generator: generatePyramid }
         ];
         let currentShapeIndex = 0;
 
@@ -204,6 +211,31 @@
                 points[i * 3] = x;
                 points[i * 3 + 1] = y;
                 points[i * 3 + 2] = z;
+            }
+            return points;
+        }
+
+        function generatePyramid(count, size) {
+            const points = new Float32Array(count * 3);
+            const s = size * 0.95;      // half base width
+            const h = size * 1.35;      // height
+            const half = h / 2;
+            const base = [[-s, -half, -s], [s, -half, -s], [s, -half, s], [-s, -half, s]];
+            const apex = [0, half, 0];
+            for (let i = 0; i < count; i++) {
+                const face = Math.floor(Math.random() * 5);
+                let x, y, z;
+                if (face === 4) {                          // square base
+                    x = (Math.random() * 2 - 1) * s; y = -half; z = (Math.random() * 2 - 1) * s;
+                } else {                                   // triangular side
+                    const a = base[face], b = base[(face + 1) % 4], c = apex;
+                    let u = Math.random(), v = Math.random();
+                    if (u + v > 1) { u = 1 - u; v = 1 - v; }
+                    x = a[0] + u * (b[0] - a[0]) + v * (c[0] - a[0]);
+                    y = a[1] + u * (b[1] - a[1]) + v * (c[1] - a[1]);
+                    z = a[2] + u * (b[2] - a[2]) + v * (c[2] - a[2]);
+                }
+                points[i * 3] = x; points[i * 3 + 1] = y; points[i * 3 + 2] = z;
             }
             return points;
         }
